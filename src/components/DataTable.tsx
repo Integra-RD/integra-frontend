@@ -1,6 +1,7 @@
 import type React from 'react'
 import { useState } from 'react'
 import { FunnelIcon, ArrowDownTrayIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import SectionHeader from './SectionHeader'
 
 export interface TableHeader {
   label: string
@@ -69,9 +70,7 @@ const DataTable: React.FC<DataTableProps> = ({
 
   return (
     <div className="px-8">
-      <h1 className="text-3xl font-semibold mb-2">{title}</h1>
-      <p className="text-gray-600 mb-6">{subtitle}</p>
-
+      <SectionHeader title={title} subtitle={subtitle} />
       {dropdownLabel && (
         <div className="flex flex-wrap items-center mb-6 gap-4">
           {extraFilters ? (
