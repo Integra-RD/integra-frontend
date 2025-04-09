@@ -80,7 +80,7 @@ const DataTable: React.FC<DataTableProps> = ({
                 <select
                   value={selected}
                   onChange={e => setSelected(e.target.value)}
-                  className="border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none"
+                  className="border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none cursor-pointer hover:border-[#29638A] transition-colors"
                 >
                   {dropdownOptions.map(option => (
                     <option key={option}>{option}</option>
@@ -92,7 +92,7 @@ const DataTable: React.FC<DataTableProps> = ({
                 <div key={index} className="relative flex items-center">
                   <button
                     onClick={() => removeFilter(index)}
-                    className="absolute left-2 z-10 p-1 rounded-full text-gray-400 hover:bg-red-100 hover:text-red-500 focus:outline-none"
+                    className="absolute left-2 z-10 p-1 rounded-full text-gray-400 hover:bg-red-100 hover:text-red-500 focus:outline-none cursor-pointer transition-colors"
                     aria-label="Remove filter"
                   >
                     <XMarkIcon className="w-4 h-4" />
@@ -100,7 +100,7 @@ const DataTable: React.FC<DataTableProps> = ({
                   <select
                     value={value}
                     onChange={e => updateFilter(index, e.target.value)}
-                    className="border border-gray-300 rounded-md pl-10 pr-4 py-2 text-sm focus:outline-none"
+                    className="border border-gray-300 rounded-md pl-10 pr-4 py-2 text-sm focus:outline-none cursor-pointer hover:border-[#29638A] transition-colors"
                   >
                     {dropdownOptions.map(option => (
                       <option key={option}>{option}</option>
@@ -110,7 +110,7 @@ const DataTable: React.FC<DataTableProps> = ({
               ))}
 
               <div
-                className="inline-flex items-center border border-gray-300 rounded-md px-4 py-2 cursor-pointer text-sm"
+                className="inline-flex items-center border border-gray-300 rounded-md px-4 py-2 cursor-pointer text-sm hover:bg-gray-50 hover:border-[#29638A] transition-colors"
                 onClick={addFilter}
               >
                 <PlusIcon className="w-4 h-4 mr-2" />
@@ -145,8 +145,8 @@ const DataTable: React.FC<DataTableProps> = ({
                 ))}
                 <th className="px-6 py-3 font-medium">
                   <div className="flex justify-end items-center space-x-2">
-                    <FunnelIcon className="w-4 h-4 cursor-pointer" />
-                    <ArrowDownTrayIcon className="w-4 h-4 cursor-pointer" />
+                    <FunnelIcon className="w-4 h-4 cursor-pointer hover:text-[#29638A] transition-colors" />
+                    <ArrowDownTrayIcon className="w-4 h-4 cursor-pointer hover:text-[#29638A] transition-colors" />
                   </div>
                 </th>
               </tr>
@@ -171,7 +171,7 @@ const DataTable: React.FC<DataTableProps> = ({
             <div className="flex items-center space-x-2">
               <span>Filas por páginas:</span>
               <select
-                className="bg-transparent focus:outline-none"
+                className="bg-transparent focus:outline-none cursor-pointer hover:text-[#29638A] transition-colors"
                 value={rowsPerPage}
                 onChange={e => {
                   setRowsPerPage(Number(e.target.value))
@@ -189,7 +189,7 @@ const DataTable: React.FC<DataTableProps> = ({
 
             <div className="flex items-center space-x-3">
               <button
-                className="px-2 text-lg font-medium text-gray-600 disabled:text-gray-300 focus:outline-none hover:text-[#29638A] hover:bg-transparent active:bg-transparent"
+                className="px-2 text-lg font-medium text-gray-600 disabled:text-gray-300 focus:outline-none hover:text-[#29638A] cursor-pointer disabled:cursor-not-allowed transition-colors"
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
               >
@@ -200,7 +200,7 @@ const DataTable: React.FC<DataTableProps> = ({
                 <span>Page</span>
                 <input
                   type="text"
-                  className="w-12 text-center border rounded focus:outline-none"
+                  className="w-12 text-center border rounded focus:outline-none focus:border-[#29638A] transition-colors"
                   value={pageInput}
                   onChange={e => setPageInput(e.target.value)}
                   onBlur={handleInputBlur}
@@ -215,7 +215,7 @@ const DataTable: React.FC<DataTableProps> = ({
               </span>
 
               <button
-                className="px-2 text-lg font-medium text-gray-600 disabled:text-gray-300 focus:outline-none hover:text-[#29638A] hover:bg-transparent active:bg-transparent"
+                className="px-2 text-lg font-medium text-gray-600 disabled:text-gray-300 focus:outline-none hover:text-[#29638A] cursor-pointer disabled:cursor-not-allowed transition-colors"
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
               >
