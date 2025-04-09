@@ -35,7 +35,7 @@ const GradeHistory: React.FC = () => {
         onNotificationClick={() => console.log('🔔 Notification clicked')}
       />
 
-      <div className="px-8">
+      <div className="px-4 md:px-8 pt-6 md:pt-8 pb-12 max-w-7xl mx-auto">
         {/* DataTable Component */}
         <DataTable
           title="Historial"
