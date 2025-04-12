@@ -9,6 +9,7 @@ export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/recovery" element={<Recovery />} />
         <Route path="/new-password" element={<NewPassword />} />
