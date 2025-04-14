@@ -29,7 +29,7 @@ const Topbar: React.FC<TopbarProps> = ({ navItems, user, onNotificationClick }) 
     .toUpperCase()
 
   return (
-    <div className="sticky top-0 z-50 px-80 py-2 bg-white/80 backdrop-blur-sm">
+    <div className="sticky top-0 z-50 px-8 sm:px-16 lg:px-25 2xl:px-86 py-2 bg-white/80 backdrop-blur-sm">
       <div className="flex items-center justify-between">
         <img src={integraLogo} alt="Logo INTEGRA" className="h-10 w-auto" />
 

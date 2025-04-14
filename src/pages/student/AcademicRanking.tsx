@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { ClockIcon, ChartBarIcon, TrophyIcon } from '@heroicons/react/24/outline'
-import Topbar from '../../components/Topbar'
+import LayoutWrapper from '../../components/LayoutWrapper'
 import Dropdown from '../../components/Dropdown'
 
 const academicRanking = [
@@ -83,6 +83,8 @@ const AcademicRanking: React.FC = () => {
     }
   ]
 
+  const user = { name: 'Juan Pérez', id: '0034' }
+
   const filteredData = useMemo(() => {
     return academicRanking.filter(student => {
       const matchGrade = selectedGrade === 'Todos los grados' || student.grade === selectedGrade
@@ -101,7 +103,7 @@ const AcademicRanking: React.FC = () => {
   const rest = useMemo(() => sortedData.slice(3), [sortedData])
 
   const renderTop3 = () => (
-    <div className="flex justify-center items-end gap-6 mb-2">
+    <div className="flex justify-center items-end gap-6 mb-8">
       {[0, 1, 2].map(i => {
         const student = top3[PODIUM_ORDER[i]]
         return (
@@ -141,63 +143,53 @@ const AcademicRanking: React.FC = () => {
   }
 
   return (
-    <>
-      <Topbar
-        navItems={navItems}
-        user={{ name: 'Juan Pérez', id: '0034' }}
-        onNotificationClick={() => console.log('🔔 Notification clicked')}
-      />
-
-      <div className="px-4 md:px-8 pt-6 md:pt-8 pb-12 max-w-5xl mx-auto">
-        <div className="mb-6">
-          <h1 className="text-2xl font-semibold text-gray-900 mb-1">Ranking Académico</h1>
-          <p className="text-sm text-gray-600">
-            Consulta los estudiantes con los mejores promedios según grado y semestre.
-          </p>
-        </div>
-
-        <div className="flex flex-col md:flex-row gap-4 mb-8">
-          <Dropdown
-            label="Grado"
-            options={gradeOptions}
-            selected={selectedGrade}
-            onChange={setSelectedGrade}
-          />
-          <Dropdown
-            label="Semestre"
-            options={semesterOptions}
-            selected={selectedSemester}
-            onChange={setSelectedSemester}
-          />
-        </div>
-
-        {renderTop3()}
-
-        {rest.length > 0 && (
-          <div className="bg-gray-50 rounded-xl overflow-hidden">
-            {rest.map((student, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between px-4 py-3 border-b border-gray-100 last:border-none hover:bg-white transition"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-6 h-6 flex items-center justify-center text-xs font-semibold rounded-full bg-blue-600 text-white">
-                    {index + 4}
-                  </div>
-                  <span className="text-sm font-medium text-gray-900">{student.name}</span>
-                </div>
-                <div className="text-sm font-semibold text-blue-700">
-                  {student.average}{' '}
-                  <span className="text-xs font-normal text-gray-500">Promedio</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {renderFeedbackMessage()}
+    <LayoutWrapper
+      navItems={navItems}
+      user={user}
+      title="Ranking Académico"
+      subtitle="Consulta los estudiantes con los mejores promedios según grado y semestre."
+    >
+      <div className="flex flex-col md:flex-row gap-4 mb-8">
+        <Dropdown
+          label="Grado"
+          options={gradeOptions}
+          selected={selectedGrade}
+          onChange={setSelectedGrade}
+        />
+        <Dropdown
+          label="Semestre"
+          options={semesterOptions}
+          selected={selectedSemester}
+          onChange={setSelectedSemester}
+        />
       </div>
-    </>
+
+      {renderTop3()}
+
+      {rest.length > 0 && (
+        <div className="bg-gray-50 rounded-xl overflow-hidden">
+          {rest.map((student, index) => (
+            <div
+              key={index}
+              className="flex items-center justify-between px-4 py-3 border-b border-gray-100 last:border-none hover:bg-white transition"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-6 h-6 flex items-center justify-center text-xs font-semibold rounded-full bg-blue-600 text-white">
+                  {index + 4}
+                </div>
+                <span className="text-sm font-medium text-gray-900">{student.name}</span>
+              </div>
+              <div className="text-sm font-semibold text-blue-700">
+                {student.average}{' '}
+                <span className="text-xs font-normal text-gray-500">Promedio</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {renderFeedbackMessage()}
+    </LayoutWrapper>
   )
 }
 

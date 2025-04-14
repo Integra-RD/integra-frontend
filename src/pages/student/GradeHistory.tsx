@@ -1,7 +1,7 @@
 import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { ClockIcon, ChartBarIcon, TrophyIcon } from '@heroicons/react/24/outline'
-import Topbar from '../../components/Topbar'
+import LayoutWrapper from '../../components/LayoutWrapper'
 import DataTable from '../../components/DataTable'
 
 const baseGrades = [
@@ -47,31 +47,25 @@ const GradeHistory: React.FC = () => {
   const user = { name: 'Juan Pérez', id: '0034' }
 
   return (
-    <>
-      <Topbar
-        navItems={navItems}
-        user={user}
-        onNotificationClick={() => console.log('🔔 Notification clicked')}
+    <LayoutWrapper
+      navItems={navItems}
+      user={user}
+      title="Historial"
+      subtitle="Consulta todas tus calificaciones en un solo lugar. Accede a tu historial académico, revisa tus notas por materia y periodo."
+    >
+      <DataTable
+        headers={[
+          { label: 'Asignatura', key: 'subject' },
+          { label: 'Calificación', key: 'grade' },
+          { label: 'Docente', key: 'teacher' },
+          { label: 'Promedio de Calificación', key: 'average' }
+        ]}
+        data={mockGrades}
+        dropdownLabel="Periodo"
+        dropdownOptions={['2021-2022', '2022-2023', '2023-2024']}
+        extraFilters={true}
       />
-
-      <div className="px-4 md:px-8 pt-6 md:pt-8 pb-12 max-w-7xl mx-auto">
-        {/* DataTable Component */}
-        <DataTable
-          title="Historial"
-          subtitle="Consulta todas tus calificaciones en un solo lugar. Accede a tu historial académico, revisa tus notas por materia y periodo."
-          headers={[
-            { label: 'Asignatura', key: 'subject' },
-            { label: 'Calificación', key: 'grade' },
-            { label: 'Docente', key: 'teacher' },
-            { label: 'Promedio de Calificación', key: 'average' }
-          ]}
-          data={mockGrades}
-          dropdownLabel="periodo"
-          dropdownOptions={['2021-2022', '2022-2023', '2023-2024']}
-          extraFilters={true}
-        />
-      </div>
-    </>
+    </LayoutWrapper>
   )
 }
 
