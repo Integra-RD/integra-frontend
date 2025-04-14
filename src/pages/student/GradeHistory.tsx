@@ -27,20 +27,20 @@ const GradeHistory: React.FC = () => {
     {
       label: 'Historial',
       icon: <ClockIcon className="w-5 h-5" />,
-      active: location.pathname === '/grade-history',
-      onClick: () => navigate('/grade-history')
+      active: location.pathname === '/student/grade-history',
+      onClick: () => navigate('/student/grade-history')
     },
     {
       label: 'Promedios',
       icon: <ChartBarIcon className="w-5 h-5" />,
-      active: location.pathname === '/grade-average',
-      onClick: () => navigate('/grade-average')
+      active: location.pathname === '/student/grade-average',
+      onClick: () => navigate('/student/grade-average')
     },
     {
       label: 'Rankings',
       icon: <TrophyIcon className="w-5 h-5" />,
-      active: location.pathname === '/rankings',
-      onClick: () => navigate('/rankings')
+      active: location.pathname === '/student/rankings',
+      onClick: () => navigate('/student/rankings')
     }
   ]
 

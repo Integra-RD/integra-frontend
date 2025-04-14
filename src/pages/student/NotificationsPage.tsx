@@ -39,20 +39,20 @@ const NotificationsPage: React.FC = () => {
     {
       label: 'Historial',
       icon: <></>,
-      active: location.pathname === '/grade-history',
-      onClick: () => navigate('/grade-history')
+      active: location.pathname === '/student/grade-history',
+      onClick: () => navigate('/student/grade-history')
     },
     {
       label: 'Promedios',
       icon: <></>,
-      active: location.pathname === '/grade-average',
-      onClick: () => navigate('/grade-average')
+      active: location.pathname === '/student/grade-average',
+      onClick: () => navigate('/student/grade-average')
     },
     {
       label: 'Rankings',
       icon: <></>,
-      active: location.pathname === '/rankings',
-      onClick: () => navigate('/rankings')
+      active: location.pathname === '/student/rankings',
+      onClick: () => navigate('/student/rankings')
     }
   ]
 
