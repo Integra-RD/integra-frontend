@@ -83,7 +83,7 @@ const ImportExportData: React.FC = () => {
   return (
     <LayoutWrapper
       title="I/O de Datos"
-      subtitle="Gestiona las solicitudes de instituciones educativas: aprueba, rechaza o consulta los centros ya registrados"
+      subtitle="Gestiona las solicitudes de instituciones educativas: aprueba, rechaza o consulta los centros ya registrados."
       user={user}
       navItems={navItems}
       headerRightSection={
@@ -150,6 +150,14 @@ const ImportExportData: React.FC = () => {
                 </button>
                 <button className="border border-[#005D85] text-[#005D85] px-4 py-1.5 rounded-md text-sm hover:border-red-500 hover:text-red-600 transition">
                   Rechazar
+                </button>
+              </div>
+            )}
+
+            {activeTab === 'registrados' && (
+              <div className="mt-4">
+                <button className="border border-yellow-500 text-yellow-600 px-4 py-1.5 rounded-md text-sm hover:bg-yellow-400 hover:text-black transition">
+                  Iniciar Proceso de Auditoría
                 </button>
               </div>
             )}

@@ -14,6 +14,7 @@ import NotificationsPage from '../pages/student/NotificationsPage'
 import MinistryHome from '../pages/ministry/Home'
 import Scholarships from '../pages/ministry/Scholarships'
 import ImportExportData from '../pages/ministry/ImportExportData'
+import AuditLog from '../pages/ministry/AuditLog'
 
 export default function AppRouter() {
   return (
@@ -35,6 +36,7 @@ export default function AppRouter() {
         <Route path="/ministry/home" element={<MinistryHome />} />
         <Route path="/ministry/scholarships" element={<Scholarships />} />
         <Route path="/ministry/data" element={<ImportExportData />} />
+        <Route path="/ministry/audits" element={<AuditLog />} />
       </Routes>
     </BrowserRouter>
   )

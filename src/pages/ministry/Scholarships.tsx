@@ -344,7 +344,7 @@ const Scholarships: React.FC = () => {
   return (
     <LayoutWrapper
       title="Becas y Programas"
-      subtitle="Visualiza, administra y evalúa los programas de becas disponibles en todo el sistema educativo nacional e internacional"
+      subtitle="Visualiza, administra y evalúa los programas de becas disponibles en todo el sistema educativo nacional e internacional."
       user={user}
       navItems={navItems}
     >
