@@ -1,4 +1,5 @@
 import React from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { ClockIcon, ChartBarIcon, TrophyIcon } from '@heroicons/react/24/outline'
 import Topbar from '../../components/Topbar'
 import DataTable from '../../components/DataTable'
@@ -19,10 +20,28 @@ const mockGrades = Array.from({ length: 100 }, (_, i) => {
 })
 
 const GradeHistory: React.FC = () => {
+  const location = useLocation()
+  const navigate = useNavigate()
+
   const navItems = [
-    { label: 'Historial', icon: <ClockIcon className="w-5 h-5" />, active: true },
-    { label: 'Promedios', icon: <ChartBarIcon className="w-5 h-5" /> },
-    { label: 'Rankings', icon: <TrophyIcon className="w-5 h-5" /> }
+    {
+      label: 'Historial',
+      icon: <ClockIcon className="w-5 h-5" />,
+      active: location.pathname === '/grade-history',
+      onClick: () => navigate('/grade-history')
+    },
+    {
+      label: 'Promedios',
+      icon: <ChartBarIcon className="w-5 h-5" />,
+      active: location.pathname === '/grade-average',
+      onClick: () => navigate('/grade-average')
+    },
+    {
+      label: 'Rankings',
+      icon: <TrophyIcon className="w-5 h-5" />,
+      active: location.pathname === '/rankings',
+      onClick: () => navigate('/rankings')
+    }
   ]
 
   const user = { name: 'Juan Pérez', id: '0034' }

@@ -1,4 +1,5 @@
 import type React from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import {
   ClockIcon,
   ChartBarIcon,
@@ -12,11 +13,30 @@ import Topbar from '../../components/Topbar'
 import SectionHeader from '../../components/SectionHeader'
 import ChartWrapper from '../../components/ChartWrapper'
 
+
 const GradeAverage: React.FC = () => {
+  const location = useLocation()
+  const navigate = useNavigate()
+
   const navItems = [
-    { label: 'Historial', icon: <ClockIcon className="w-5 h-5" /> },
-    { label: 'Promedios', icon: <ChartBarIcon className="w-5 h-5" />, active: true },
-    { label: 'Rankings', icon: <TrophyIcon className="w-5 h-5" /> }
+    {
+      label: 'Historial',
+      icon: <ClockIcon className="w-5 h-5" />,
+      active: location.pathname === '/grade-history',
+      onClick: () => navigate('/grade-history')
+    },
+    {
+      label: 'Promedios',
+      icon: <ChartBarIcon className="w-5 h-5" />,
+      active: location.pathname === '/grade-average',
+      onClick: () => navigate('/grade-average')
+    },
+    {
+      label: 'Rankings',
+      icon: <TrophyIcon className="w-5 h-5" />,
+      active: location.pathname === '/rankings',
+      onClick: () => navigate('/rankings')
+    }
   ]
 
   const user = {
