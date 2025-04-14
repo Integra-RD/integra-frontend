@@ -13,6 +13,7 @@ import NotificationsPage from '../pages/student/NotificationsPage'
 // Ministry
 import MinistryHome from '../pages/ministry/Home'
 import Scholarships from '../pages/ministry/Scholarships'
+import ImportExportData from '../pages/ministry/ImportExportData'
 
 export default function AppRouter() {
   return (
@@ -33,6 +34,7 @@ export default function AppRouter() {
         {/* Ministry */}
         <Route path="/ministry/home" element={<MinistryHome />} />
         <Route path="/ministry/scholarships" element={<Scholarships />} />
+        <Route path="/ministry/data" element={<ImportExportData />} />
       </Routes>
     </BrowserRouter>
   )

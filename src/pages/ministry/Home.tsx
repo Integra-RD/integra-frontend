@@ -57,7 +57,7 @@ const MinistryHome: React.FC = () => {
       navItems={navItems}
       user={user}
       title="Bienvenido al Portal del Ministerio de Educación"
-      subtitle="Indique la ciudad que desea consultar"
+      subtitle="Explora centros educativos y compara su desempeño académico por provincia."
     >
       <DataTable
         headers={[

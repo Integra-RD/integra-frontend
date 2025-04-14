@@ -342,7 +342,12 @@ const Scholarships: React.FC = () => {
   ]
 
   return (
-    <LayoutWrapper title="Becas y Programas" user={user} navItems={navItems}>
+    <LayoutWrapper
+      title="Becas y Programas"
+      subtitle="Visualiza, administra y evalúa los programas de becas disponibles en todo el sistema educativo nacional e internacional"
+      user={user}
+      navItems={navItems}
+    >
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
         <ViewCard
           title="Total de Becas Activas"

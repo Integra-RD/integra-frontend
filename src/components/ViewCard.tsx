@@ -1,5 +1,9 @@
 import React from 'react'
-import { ArrowTopRightOnSquareIcon, Cog8ToothIcon } from '@heroicons/react/24/outline'
+import {
+  ArrowTopRightOnSquareIcon,
+  Cog8ToothIcon,
+  ArrowDownTrayIcon
+} from '@heroicons/react/24/outline'
 import { cn } from '../utils/cn'
 
 interface ViewCardProps {
@@ -17,9 +21,9 @@ interface ViewCardProps {
   onExternalClick?: () => void
   showInternalLink?: boolean
   onInternalClick?: () => void
+  showDownloadLink?: boolean
+  onDownloadClick?: () => void
 }
-
-// TODO: Add icon to the left of scholarship titles
 
 const ViewCard: React.FC<ViewCardProps> = ({
   title,
@@ -35,7 +39,9 @@ const ViewCard: React.FC<ViewCardProps> = ({
   showExternalLink = false,
   onExternalClick,
   showInternalLink = false,
-  onInternalClick
+  onInternalClick,
+  showDownloadLink = false,
+  onDownloadClick
 }) => {
   const isCompact = variant === 'compact'
 
@@ -92,8 +98,16 @@ const ViewCard: React.FC<ViewCardProps> = ({
 
       {children}
 
-      {(showExternalLink || showInternalLink) && (
+      {(showExternalLink || showInternalLink || showDownloadLink) && (
         <div className="absolute top-3 right-3 flex items-center gap-2">
+          {showDownloadLink && (
+            <ArrowDownTrayIcon
+              onClick={onDownloadClick}
+              title="Descargar"
+              className="w-5 h-5 cursor-pointer text-slate-400 hover:text-blue-600 transition"
+            />
+          )}
+
           {showExternalLink && (
             <ArrowTopRightOnSquareIcon
               onClick={onExternalClick}
