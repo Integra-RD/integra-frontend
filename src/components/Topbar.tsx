@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import { BellIcon } from '@heroicons/react/24/outline'
 import integraLogo from '../assets/integraLogo.svg'
 
@@ -17,10 +18,11 @@ interface UserInfo {
 interface TopbarProps {
   navItems: NavItem[]
   user: UserInfo
-  onNotificationClick?: () => void
 }
 
-const Topbar: React.FC<TopbarProps> = ({ navItems, user, onNotificationClick }) => {
+const Topbar: React.FC<TopbarProps> = ({ navItems, user }) => {
+  const navigate = useNavigate()
+
   const initials = user.name
     .split(' ')
     .map(n => n[0])
@@ -52,7 +54,7 @@ const Topbar: React.FC<TopbarProps> = ({ navItems, user, onNotificationClick }) 
           </div>
 
           <div className="flex items-center space-x-4 bg-[#f5faff]/90 backdrop-blur-md px-4 py-2 rounded-full shadow-sm">
-            <button onClick={onNotificationClick} aria-label="Notificaciones">
+            <button onClick={() => navigate('/notifications')} aria-label="Notificaciones">
               <BellIcon className="w-5 h-5 text-gray-700 hover:text-blue-600 transition" />
             </button>
             <div className="flex items-center space-x-2">

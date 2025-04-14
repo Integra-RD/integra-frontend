@@ -5,6 +5,7 @@ import NewPassword from '../pages/auth/NewPassword'
 import GradeHistory from '../pages/student/GradeHistory'
 import GradeAverage from '../pages/student/GradeAverage'
 import AcademicRanking from '../pages/student/AcademicRanking'
+import NotificationsPage from '../pages/student/NotificationsPage'
 
 export default function AppRouter() {
   return (
@@ -17,6 +18,7 @@ export default function AppRouter() {
         <Route path="/grade-history" element={<GradeHistory />} />
         <Route path="/grade-average" element={<GradeAverage />} />
         <Route path="/rankings" element={<AcademicRanking />} />
+        <Route path="/notifications" element={<NotificationsPage />} />
       </Routes>
     </BrowserRouter>
   )
