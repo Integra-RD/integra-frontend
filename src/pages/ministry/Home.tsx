@@ -3,7 +3,8 @@ import {
   AcademicCapIcon,
   CircleStackIcon,
   DocumentMagnifyingGlassIcon,
-  HomeIcon
+  HomeIcon,
+  MegaphoneIcon
 } from '@heroicons/react/24/outline'
 import LayoutWrapper from '../../components/LayoutWrapper'
 import DataTable from '../../components/DataTable'
@@ -47,6 +48,12 @@ const MinistryHome: React.FC = () => {
       icon: <DocumentMagnifyingGlassIcon className="w-5 h-5" />,
       active: location.pathname === '/ministry/audits',
       onClick: () => navigate('/ministry/audits')
+    },
+    {
+      label: 'Comunicaciones',
+      icon: <MegaphoneIcon className="w-5 h-5" />,
+      active: location.pathname === '/ministry/messaging',
+      onClick: () => navigate('/ministry/messaging')
     }
   ]
 

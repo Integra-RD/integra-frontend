@@ -248,7 +248,7 @@ const MessageComposer: React.FC<MessageComposerProps> = ({ senderRole, onSend })
             <button
               onClick={handleSend}
               disabled={!canSend}
-              className="px-4 py-2 bg-[#005D85] text-white rounded-md text-sm flex items-center gap-2 hover:bg-[#004766] disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-[#D3E4F6] text-black rounded-md text-sm flex items-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
               <PaperAirplaneIcon className="w-4 h-4" />
               Enviar Comunicado

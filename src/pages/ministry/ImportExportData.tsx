@@ -8,7 +8,8 @@ import {
   BuildingLibraryIcon,
   InboxArrowDownIcon,
   CircleStackIcon as RecordsIcon,
-  TrophyIcon
+  TrophyIcon,
+  MegaphoneIcon
 } from '@heroicons/react/24/outline'
 import { useLocation, useNavigate } from 'react-router-dom'
 import LayoutWrapper from '../../components/LayoutWrapper'
@@ -58,6 +59,12 @@ const ImportExportData: React.FC = () => {
       icon: <DocumentMagnifyingGlassIcon className="w-5 h-5" />,
       active: location.pathname === '/ministry/audits',
       onClick: () => navigate('/ministry/audits')
+    },
+    {
+      label: 'Comunicaciones',
+      icon: <MegaphoneIcon className="w-5 h-5" />,
+      active: location.pathname === '/ministry/messaging',
+      onClick: () => navigate('/ministry/messaging')
     }
   ]
 

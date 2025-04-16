@@ -4,17 +4,24 @@ import Login from '../pages/auth/Login'
 import Recovery from '../pages/auth/Recovery'
 import NewPassword from '../pages/auth/NewPassword'
 
-// Student
-import GradeHistory from '../pages/student/GradeHistory'
-import GradeAverage from '../pages/student/GradeAverage'
-import AcademicRanking from '../pages/student/AcademicRanking'
-import NotificationsPage from '../pages/student/NotificationsPage'
-
 // Ministry
 import MinistryHome from '../pages/ministry/Home'
 import Scholarships from '../pages/ministry/Scholarships'
 import ImportExportData from '../pages/ministry/ImportExportData'
 import AuditLog from '../pages/ministry/AuditLog'
+import MinistryMessagingPage from '../pages/ministry/Messaging'
+
+// Director
+import DirectorMessagingPage from '../pages/director/Messaging'
+
+// Teacher
+import TeacherMessagingPage from '../pages/teacher/Messaging'
+
+// Student
+import GradeHistory from '../pages/student/GradeHistory'
+import GradeAverage from '../pages/student/GradeAverage'
+import AcademicRanking from '../pages/student/AcademicRanking'
+import NotificationsPage from '../pages/student/NotificationsPage'
 
 export default function AppRouter() {
   return (
@@ -26,17 +33,24 @@ export default function AppRouter() {
         <Route path="/recovery" element={<Recovery />} />
         <Route path="/new-password" element={<NewPassword />} />
 
-        {/* Student */}
-        <Route path="/student/grade-history" element={<GradeHistory />} />
-        <Route path="/student/grade-average" element={<GradeAverage />} />
-        <Route path="/student/rankings" element={<AcademicRanking />} />
-        <Route path="/student/notifications" element={<NotificationsPage />} />
-
         {/* Ministry */}
         <Route path="/ministry/home" element={<MinistryHome />} />
         <Route path="/ministry/scholarships" element={<Scholarships />} />
         <Route path="/ministry/data" element={<ImportExportData />} />
         <Route path="/ministry/audits" element={<AuditLog />} />
+        <Route path="/ministry/messaging" element={<MinistryMessagingPage />} />
+
+        {/* Director */}
+        <Route path="/director/messaging" element={<DirectorMessagingPage />} />
+
+        {/* Teacher */}
+        <Route path="/teacher/messaging" element={<TeacherMessagingPage />} />
+
+        {/* Student */}
+        <Route path="/student/grade-history" element={<GradeHistory />} />
+        <Route path="/student/grade-average" element={<GradeAverage />} />
+        <Route path="/student/rankings" element={<AcademicRanking />} />
+        <Route path="/student/notifications" element={<NotificationsPage />} />
       </Routes>
     </BrowserRouter>
   )
