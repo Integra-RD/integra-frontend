@@ -10,11 +10,15 @@ import GradeAverage from '../pages/student/GradeAverage'
 import AcademicRanking from '../pages/student/AcademicRanking'
 import NotificationsPage from '../pages/student/NotificationsPage'
 
+// Director
+import InstitutionData from '../pages/director/institutionData'
+
 // Ministry
 import MinistryHome from '../pages/ministry/Home'
 import Scholarships from '../pages/ministry/Scholarships'
 import ImportExportData from '../pages/ministry/ImportExportData'
 import AuditLog from '../pages/ministry/AuditLog'
+import DirectorHome from '../pages/director/Home'
 
 export default function AppRouter() {
   return (
@@ -31,6 +35,10 @@ export default function AppRouter() {
         <Route path="/student/grade-average" element={<GradeAverage />} />
         <Route path="/student/rankings" element={<AcademicRanking />} />
         <Route path="/student/notifications" element={<NotificationsPage />} />
+
+        {/*Director */}
+        <Route path="/director/home" element={<DirectorHome/>} />
+        <Route path="/director/institution" element={<InstitutionData />} />
 
         {/* Ministry */}
         <Route path="/ministry/home" element={<MinistryHome />} />
