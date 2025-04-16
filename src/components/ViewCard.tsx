@@ -2,7 +2,8 @@ import React from 'react'
 import {
   ArrowTopRightOnSquareIcon,
   Cog8ToothIcon,
-  ArrowDownTrayIcon
+  ArrowDownTrayIcon,
+  TrashIcon
 } from '@heroicons/react/24/outline'
 import { cn } from '../utils/cn'
 
@@ -23,6 +24,8 @@ interface ViewCardProps {
   onInternalClick?: () => void
   showDownloadLink?: boolean
   onDownloadClick?: () => void
+  showDelete?: boolean
+  onDeleteClick?: () => void
 }
 
 const ViewCard: React.FC<ViewCardProps> = ({
@@ -41,7 +44,9 @@ const ViewCard: React.FC<ViewCardProps> = ({
   showInternalLink = false,
   onInternalClick,
   showDownloadLink = false,
-  onDownloadClick
+  onDownloadClick,
+  showDelete = false,
+  onDeleteClick
 }) => {
   const isCompact = variant === 'compact'
 
@@ -119,8 +124,16 @@ const ViewCard: React.FC<ViewCardProps> = ({
           {showInternalLink && (
             <Cog8ToothIcon
               onClick={onInternalClick}
-              title="Ir al CRUD de becas"
+              title="Configuraciones"
               className="w-5 h-5 cursor-pointer text-slate-400 hover:text-blue-600 transition"
+            />
+          )}
+
+          {showDelete && (
+            <TrashIcon
+              onClick={onDeleteClick}
+              title="Eliminar"
+              className="w-5 h-5 cursor-pointer text-slate-400 hover:text-red-500 transition"
             />
           )}
         </div>
