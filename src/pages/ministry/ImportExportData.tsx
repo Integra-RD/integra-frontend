@@ -6,8 +6,10 @@ import {
   DocumentMagnifyingGlassIcon,
   CalendarDaysIcon,
   BuildingLibraryIcon,
-  InformationCircleIcon,
-  InboxArrowDownIcon
+  InboxArrowDownIcon,
+  CircleStackIcon as RecordsIcon,
+  TrophyIcon,
+  MegaphoneIcon
 } from '@heroicons/react/24/outline'
 import { useLocation, useNavigate } from 'react-router-dom'
 import LayoutWrapper from '../../components/LayoutWrapper'
@@ -18,34 +20,14 @@ const submissions = [
   { name: 'Universidad Ejemplo', date: '04/06/2025', period: 'Semestre Enero - Junio 2025' },
   { name: 'Instituto Ejemplo', date: '04/06/2025', period: 'Semestre Enero - Junio 2025' },
   { name: 'Escuela Ejemplo', date: '04/06/2025', period: 'Semestre Enero - Junio 2025' },
-  { name: 'Centro Educativo Ejemplo', date: '04/06/2025', period: 'Semestre Enero - Junio 2025' },
-  { name: 'Academia Ejemplo', date: '04/06/2025', period: 'Semestre Enero - Junio 2025' },
-  { name: 'Institución Ejemplo', date: '04/06/2025', period: 'Semestre Enero - Junio 2025' },
-  { name: 'Colegio Ejemplo', date: '04/06/2025', period: 'Semestre Enero - Junio 2025' },
-  {
-    name: 'Universidad Nacional Ejemplo',
-    date: '04/06/2025',
-    period: 'Semestre Enero - Junio 2025'
-  },
-  { name: 'Instituto Nacional Ejemplo', date: '04/06/2025', period: 'Semestre Enero - Junio 2025' },
-  { name: 'Escuela Nacional Ejemplo', date: '04/06/2025', period: 'Semestre Enero - Junio 2025' },
-  {
-    name: 'Centro Educativo Nacional Ejemplo',
-    date: '04/06/2025',
-    period: 'Semestre Enero - Junio 2025'
-  },
-  { name: 'Academia Nacional Ejemplo', date: '04/06/2025', period: 'Semestre Enero - Junio 2025' },
-  {
-    name: 'Institución Nacional Ejemplo',
-    date: '04/06/2025',
-    period: 'Semestre Enero - Junio 2025'
-  }
+  { name: 'Centro Educativo Ejemplo', date: '04/06/2025', period: 'Semestre Enero - Junio 2025' }
 ]
 
 const ImportExportData: React.FC = () => {
   const user = { name: 'Juan Pérez', id: '0034' }
   const location = useLocation()
   const navigate = useNavigate()
+
   const [activeTab, setActiveTab] = useState<'recibidos' | 'registrados'>('recibidos')
   const [currentPage, setCurrentPage] = useState(1)
 
@@ -77,6 +59,12 @@ const ImportExportData: React.FC = () => {
       icon: <DocumentMagnifyingGlassIcon className="w-5 h-5" />,
       active: location.pathname === '/ministry/audits',
       onClick: () => navigate('/ministry/audits')
+    },
+    {
+      label: 'Comunicaciones',
+      icon: <MegaphoneIcon className="w-5 h-5" />,
+      active: location.pathname === '/ministry/messaging',
+      onClick: () => navigate('/ministry/messaging')
     }
   ]
 
@@ -120,27 +108,56 @@ const ImportExportData: React.FC = () => {
             key={idx}
             title={submission.name}
             titleIcon={<BuildingLibraryIcon className="w-5 h-5 text-blue-800" />}
-            rightIcon={<InformationCircleIcon className="w-4 h-4 text-gray-400 mt-0.5" />}
             showDownloadLink
             onDownloadClick={() => console.log(`Descargando datos de: ${submission.name}`)}
+            showDelete={activeTab === 'registrados'}
+            onDeleteClick={() => console.log(`Eliminando ${submission.name}`)}
             className="bg-[#f2f6fc]"
             variant="detailed"
           >
             <div className="flex flex-wrap items-center gap-4">
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-md shadow-sm text-sm">
-                <CalendarDaysIcon className="w-4 h-4 text-gray-500" />
-                <div>
-                  <p className="text-[10px] text-gray-500">Fecha</p>
-                  <p className="text-sm font-medium">{submission.date}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-md shadow-sm text-sm">
-                <CalendarDaysIcon className="w-4 h-4 text-gray-500" />
-                <div>
-                  <p className="text-[10px] text-gray-500">Periodo Correspondiente</p>
-                  <p className="text-sm font-medium">{submission.period}</p>
-                </div>
-              </div>
+              {activeTab === 'recibidos' ? (
+                <>
+                  <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-md shadow-sm text-sm">
+                    <CalendarDaysIcon className="w-4 h-4 text-gray-500" />
+                    <div>
+                      <p className="text-[10px] text-gray-500">Fecha</p>
+                      <p className="text-sm font-medium">{submission.date}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-md shadow-sm text-sm">
+                    <CalendarDaysIcon className="w-4 h-4 text-gray-500" />
+                    <div>
+                      <p className="text-[10px] text-gray-500">Periodo Correspondiente</p>
+                      <p className="text-sm font-medium">{submission.period}</p>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-md shadow-sm text-sm">
+                    <CalendarDaysIcon className="w-4 h-4 text-gray-500" />
+                    <div>
+                      <p className="text-[10px] text-gray-500">Fecha Última Actualización</p>
+                      <p className="text-sm font-medium">{submission.date}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-md shadow-sm text-sm">
+                    <RecordsIcon className="w-4 h-4 text-gray-500" />
+                    <div>
+                      <p className="text-[10px] text-gray-500">Cantidad de Registros</p>
+                      <p className="text-sm font-medium">24</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-md shadow-sm text-sm">
+                    <TrophyIcon className="w-4 h-4 text-gray-500" />
+                    <div>
+                      <p className="text-[10px] text-gray-500">Promedio General</p>
+                      <p className="text-sm font-medium">87.2</p>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
 
             {activeTab === 'recibidos' && (

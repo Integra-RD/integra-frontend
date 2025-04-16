@@ -7,11 +7,7 @@ interface RedirectLinkProps {
 }
 
 const RedirectLink: React.FC<RedirectLinkProps> = ({ text, href, ariaLabel }) => (
-  <a
-    href={href}
-    aria-label={ariaLabel ?? text}
-    className="text-sm text-[#3498db] hover:underline"
-  >
+  <a href={href} aria-label={ariaLabel ?? text} className="text-sm text-[#3498db] hover:underline">
     {text}
   </a>
 )

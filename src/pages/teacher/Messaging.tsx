@@ -1,0 +1,56 @@
+import { useLocation, useNavigate } from 'react-router-dom'
+import { DocumentMagnifyingGlassIcon, MegaphoneIcon } from '@heroicons/react/24/outline'
+
+import LayoutWrapper from '../../components/LayoutWrapper'
+import MessagingLayout from '../../components/MessagingLayout'
+import type { Message } from '../../components/MessageInbox'
+
+const mockMessages: Message[] = [
+  {
+    id: '1',
+    title: 'Recordatorio de entrega',
+    content: 'Recuerda subir las calificaciones antes del viernes.',
+    timestamp: '2025-04-15 14:30',
+    isRead: false,
+    sender: 'Dirección Académica',
+    type: 'recibido'
+  },
+  {
+    id: '2',
+    title: 'Mensaje a estudiantes',
+    content: 'No olviden repasar el tema 5 para la próxima clase.',
+    timestamp: '2025-04-12 10:15',
+    isRead: true,
+    sender: 'Tú',
+    type: 'enviado'
+  }
+]
+
+const TeacherMessagingPage = () => {
+  const user = { name: 'Profa. Laura Castillo', id: 'D-0741' }
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  const navItems = [
+    {
+      label: 'Reportes',
+      icon: <DocumentMagnifyingGlassIcon className="w-5 h-5" />,
+      active: location.pathname === '/teacher/reports',
+      onClick: () => navigate('/teacher/reports')
+    },
+    {
+      label: 'Comunicaciones',
+      icon: <MegaphoneIcon className="w-5 h-5" />,
+      active: location.pathname === '/teacher/messaging',
+      onClick: () => navigate('/teacher/messaging')
+    }
+  ]
+
+  return (
+    <LayoutWrapper title="Comunicaciones Internas" user={user} navItems={navItems}>
+      <MessagingLayout senderRole="Docente" initialMessages={mockMessages} />
+    </LayoutWrapper>
+  )
+}
+
+export default TeacherMessagingPage

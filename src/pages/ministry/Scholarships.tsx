@@ -8,6 +8,7 @@ import {
   ClockIcon,
   DocumentMagnifyingGlassIcon,
   HomeIcon,
+  MegaphoneIcon,
   UserGroupIcon
 } from '@heroicons/react/24/outline'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -338,6 +339,12 @@ const Scholarships: React.FC = () => {
       icon: <DocumentMagnifyingGlassIcon className="w-5 h-5" />,
       active: location.pathname === '/ministry/audits',
       onClick: () => navigate('/ministry/audits')
+    },
+    {
+      label: 'Comunicaciones',
+      icon: <MegaphoneIcon className="w-5 h-5" />,
+      active: location.pathname === '/ministry/messaging',
+      onClick: () => navigate('/ministry/messaging')
     }
   ]
 
