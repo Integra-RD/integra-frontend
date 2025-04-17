@@ -25,7 +25,6 @@ import NotificationsPage from '../pages/student/NotificationsPage'
 import DirectorHome from '../pages/director/Home'
 import InstitutionData from '../pages/director/InstitutionData'
 
-
 export default function AppRouter() {
   return (
     <BrowserRouter>
@@ -56,7 +55,7 @@ export default function AppRouter() {
         <Route path="/student/notifications" element={<NotificationsPage />} />
 
         {/*Director */}
-        <Route path="/director/home" element={<DirectorHome/>} />
+        <Route path="/director/home" element={<DirectorHome />} />
         <Route path="/director/institution" element={<InstitutionData />} />
       </Routes>
     </BrowserRouter>
