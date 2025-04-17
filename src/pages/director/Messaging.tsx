@@ -1,11 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-import {
-  UsersIcon,
-  BuildingLibraryIcon,
-  DocumentMagnifyingGlassIcon,
-  MegaphoneIcon
-} from '@heroicons/react/24/outline'
-
+import { getNavItemsByRole } from '../../utils/getNavItemsByRole'
 import LayoutWrapper from '../../components/LayoutWrapper'
 import MessagingLayout from '../../components/MessagingLayout'
 import type { Message } from '../../components/MessageInbox'
@@ -27,32 +21,7 @@ const DirectorMessagingPage = () => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const navItems = [
-    {
-      label: 'Gestión de Personas',
-      icon: <UsersIcon className="w-5 h-5" />,
-      active: location.pathname === '/director/personas',
-      onClick: () => navigate('/director/personas')
-    },
-    {
-      label: 'Gestión de Centro Educativo',
-      icon: <BuildingLibraryIcon className="w-5 h-5" />,
-      active: location.pathname === '/director/centro',
-      onClick: () => navigate('/director/centro')
-    },
-    {
-      label: 'Reportes',
-      icon: <DocumentMagnifyingGlassIcon className="w-5 h-5" />,
-      active: location.pathname === '/director/reportes',
-      onClick: () => navigate('/director/reportes')
-    },
-    {
-      label: 'Comunicaciones',
-      icon: <MegaphoneIcon className="w-5 h-5" />,
-      active: location.pathname === '/director/mensajes',
-      onClick: () => navigate('/director/mensajes')
-    }
-  ]
+  const navItems = getNavItemsByRole('director', location, navigate)
 
   return (
     <LayoutWrapper title="Comunicaciones Internas" user={user} navItems={navItems}>

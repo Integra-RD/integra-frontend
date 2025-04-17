@@ -1,13 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-import {
-  AcademicCapIcon,
-  CircleStackIcon,
-  DocumentMagnifyingGlassIcon,
-  HomeIcon,
-  MegaphoneIcon
-} from '@heroicons/react/24/outline'
 import LayoutWrapper from '../../components/LayoutWrapper'
 import DataTable from '../../components/DataTable'
+import { getNavItemsByRole } from '../../utils/getNavItemsByRole'
 
 const mockSchools = Array.from({ length: 12 }, (_, i) => ({
   id: 53849 + i,
@@ -23,39 +17,7 @@ const mockSchools = Array.from({ length: 12 }, (_, i) => ({
 const MinistryHome: React.FC = () => {
   const location = useLocation()
   const navigate = useNavigate()
-
-  const navItems = [
-    {
-      label: 'Inicio',
-      icon: <HomeIcon className="w-5 h-5" />,
-      active: location.pathname === '/ministry/home',
-      onClick: () => navigate('/ministry/home')
-    },
-    {
-      label: 'Becas y Programas',
-      icon: <AcademicCapIcon className="w-5 h-5" />,
-      active: location.pathname === '/ministry/scholarships',
-      onClick: () => navigate('/ministry/scholarships')
-    },
-    {
-      label: 'I/O de Datos',
-      icon: <CircleStackIcon className="w-5 h-5" />,
-      active: location.pathname === '/ministry/data',
-      onClick: () => navigate('/ministry/data')
-    },
-    {
-      label: 'Auditorías',
-      icon: <DocumentMagnifyingGlassIcon className="w-5 h-5" />,
-      active: location.pathname === '/ministry/audits',
-      onClick: () => navigate('/ministry/audits')
-    },
-    {
-      label: 'Comunicaciones',
-      icon: <MegaphoneIcon className="w-5 h-5" />,
-      active: location.pathname === '/ministry/messaging',
-      onClick: () => navigate('/ministry/messaging')
-    }
-  ]
+  const navItems = getNavItemsByRole('ministry', location, navigate)
 
   const user = { name: 'Juan Pérez', id: '0034' }
 

@@ -34,6 +34,7 @@ export default function AppRouter() {
         <Route path="/new-password" element={<NewPassword />} />
 
         {/* Ministry */}
+        <Route path="/ministry/" element={<Navigate to="/ministry/home" replace />} />
         <Route path="/ministry/home" element={<MinistryHome />} />
         <Route path="/ministry/scholarships" element={<Scholarships />} />
         <Route path="/ministry/data" element={<ImportExportData />} />
@@ -47,6 +48,7 @@ export default function AppRouter() {
         <Route path="/teacher/messaging" element={<TeacherMessagingPage />} />
 
         {/* Student */}
+        <Route path="/student/" element={<Navigate to="/student/grade-history" replace />} />
         <Route path="/student/grade-history" element={<GradeHistory />} />
         <Route path="/student/grade-average" element={<GradeAverage />} />
         <Route path="/student/rankings" element={<AcademicRanking />} />

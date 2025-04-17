@@ -1,40 +1,13 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-import {
-  ClockIcon,
-  ChartBarIcon,
-  TrophyIcon,
-  BookOpenIcon,
-  AcademicCapIcon,
-  FireIcon,
-  ChevronUpIcon
-} from '@heroicons/react/24/outline'
+import { BookOpenIcon, AcademicCapIcon, FireIcon, ChevronUpIcon } from '@heroicons/react/24/outline'
 import LayoutWrapper from '../../components/LayoutWrapper'
 import ChartWrapper from '../../components/ChartWrapper'
+import { getNavItemsByRole } from '../../utils/getNavItemsByRole'
 
 const GradeAverage: React.FC = () => {
   const location = useLocation()
   const navigate = useNavigate()
-
-  const navItems = [
-    {
-      label: 'Historial',
-      icon: <ClockIcon className="w-5 h-5" />,
-      active: location.pathname === '/student/grade-history',
-      onClick: () => navigate('/student/grade-history')
-    },
-    {
-      label: 'Promedios',
-      icon: <ChartBarIcon className="w-5 h-5" />,
-      active: location.pathname === '/student/grade-average',
-      onClick: () => navigate('/student/grade-average')
-    },
-    {
-      label: 'Rankings',
-      icon: <TrophyIcon className="w-5 h-5" />,
-      active: location.pathname === '/student/rankings',
-      onClick: () => navigate('/student/rankings')
-    }
-  ]
+  const navItems = getNavItemsByRole('student', location, navigate)
 
   const user = { name: 'Juan Pérez', id: '0034' }
 

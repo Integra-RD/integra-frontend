@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import LayoutWrapper from '../../components/LayoutWrapper'
 import NotificationCard, { Notification } from '../../components/NotificationCard'
+import { getNavItemsByRole } from '../../utils/getNavItemsByRole'
 
 // TODO: Add logic to handle mark as read/unread, icons for type of notif, proper date extraction
 const mockNotifications: Notification[] = [
@@ -34,27 +35,7 @@ const mockNotifications: Notification[] = [
 const NotificationsPage: React.FC = () => {
   const location = useLocation()
   const navigate = useNavigate()
-
-  const navItems = [
-    {
-      label: 'Historial',
-      icon: <></>,
-      active: location.pathname === '/student/grade-history',
-      onClick: () => navigate('/student/grade-history')
-    },
-    {
-      label: 'Promedios',
-      icon: <></>,
-      active: location.pathname === '/student/grade-average',
-      onClick: () => navigate('/student/grade-average')
-    },
-    {
-      label: 'Rankings',
-      icon: <></>,
-      active: location.pathname === '/student/rankings',
-      onClick: () => navigate('/student/rankings')
-    }
-  ]
+  const navItems = getNavItemsByRole('student', location, navigate)
 
   const user = { name: 'Juan Pérez', id: '0034' }
 

@@ -1,9 +1,8 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-import { DocumentMagnifyingGlassIcon, MegaphoneIcon } from '@heroicons/react/24/outline'
-
 import LayoutWrapper from '../../components/LayoutWrapper'
 import MessagingLayout from '../../components/MessagingLayout'
 import type { Message } from '../../components/MessageInbox'
+import { getNavItemsByRole } from '../../utils/getNavItemsByRole'
 
 const mockMessages: Message[] = [
   {
@@ -31,20 +30,7 @@ const TeacherMessagingPage = () => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const navItems = [
-    {
-      label: 'Reportes',
-      icon: <DocumentMagnifyingGlassIcon className="w-5 h-5" />,
-      active: location.pathname === '/teacher/reports',
-      onClick: () => navigate('/teacher/reports')
-    },
-    {
-      label: 'Comunicaciones',
-      icon: <MegaphoneIcon className="w-5 h-5" />,
-      active: location.pathname === '/teacher/messaging',
-      onClick: () => navigate('/teacher/messaging')
-    }
-  ]
+  const navItems = getNavItemsByRole('teacher', location, navigate)
 
   return (
     <LayoutWrapper title="Comunicaciones Internas" user={user} navItems={navItems}>

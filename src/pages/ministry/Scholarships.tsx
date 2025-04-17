@@ -3,12 +3,8 @@ import {
   AcademicCapIcon,
   BanknotesIcon,
   BuildingOffice2Icon,
-  CircleStackIcon,
   ClipboardDocumentCheckIcon,
   ClockIcon,
-  DocumentMagnifyingGlassIcon,
-  HomeIcon,
-  MegaphoneIcon,
   UserGroupIcon
 } from '@heroicons/react/24/outline'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -16,8 +12,8 @@ import LayoutWrapper from '../../components/LayoutWrapper'
 import ViewCard from '../../components/ViewCard'
 import ChartWrapper from '../../components/ChartWrapper'
 import logoPlaceholder from '../../assets/integraLogo.svg'
+import { getNavItemsByRole } from '../../utils/getNavItemsByRole'
 
-// TODO: Respect DRY with the navItems inside the topbar
 const universities = [
   { name: 'Universidad Placeholder A', programs: '3 Programas Disponibles', logo: logoPlaceholder },
   { name: 'Universidad Placeholder B', programs: '2 Programas Disponibles', logo: logoPlaceholder },
@@ -309,44 +305,12 @@ const Scholarships: React.FC = () => {
   const user = { name: 'Juan Pérez', id: '0034' }
   const location = useLocation()
   const navigate = useNavigate()
+  const navItems = getNavItemsByRole('ministry', location, navigate)
 
   const [currentPage, setCurrentPage] = useState(1)
   const perPage = 5
   const totalPages = Math.ceil(scholarships.length / perPage)
   const currentScholarships = scholarships.slice((currentPage - 1) * perPage, currentPage * perPage)
-
-  const navItems = [
-    {
-      label: 'Inicio',
-      icon: <HomeIcon className="w-5 h-5" />,
-      active: location.pathname === '/ministry/home',
-      onClick: () => navigate('/ministry/home')
-    },
-    {
-      label: 'Becas y Programas',
-      icon: <AcademicCapIcon className="w-5 h-5" />,
-      active: location.pathname === '/ministry/scholarships',
-      onClick: () => navigate('/ministry/scholarships')
-    },
-    {
-      label: 'I/O de Datos',
-      icon: <CircleStackIcon className="w-5 h-5" />,
-      active: location.pathname === '/ministry/data',
-      onClick: () => navigate('/ministry/data')
-    },
-    {
-      label: 'Auditorías',
-      icon: <DocumentMagnifyingGlassIcon className="w-5 h-5" />,
-      active: location.pathname === '/ministry/audits',
-      onClick: () => navigate('/ministry/audits')
-    },
-    {
-      label: 'Comunicaciones',
-      icon: <MegaphoneIcon className="w-5 h-5" />,
-      active: location.pathname === '/ministry/messaging',
-      onClick: () => navigate('/ministry/messaging')
-    }
-  ]
 
   return (
     <LayoutWrapper
