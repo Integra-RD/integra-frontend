@@ -22,6 +22,8 @@ import GradeHistory from '../pages/student/GradeHistory'
 import GradeAverage from '../pages/student/GradeAverage'
 import AcademicRanking from '../pages/student/AcademicRanking'
 import NotificationsPage from '../pages/student/NotificationsPage'
+import DirectorHome from '../pages/director/Home'
+import InstitutionData from '../pages/director/InstitutionData'
 
 export default function AppRouter() {
   return (
@@ -51,6 +53,10 @@ export default function AppRouter() {
         <Route path="/student/grade-average" element={<GradeAverage />} />
         <Route path="/student/rankings" element={<AcademicRanking />} />
         <Route path="/student/notifications" element={<NotificationsPage />} />
+
+        {/*Director */}
+        <Route path="/director/home" element={<DirectorHome />} />
+        <Route path="/director/institution" element={<InstitutionData />} />
       </Routes>
     </BrowserRouter>
   )
