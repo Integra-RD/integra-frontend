@@ -22,7 +22,7 @@ import GradeHistory from '../pages/student/GradeHistory'
 import GradeAverage from '../pages/student/GradeAverage'
 import AcademicRanking from '../pages/student/AcademicRanking'
 import NotificationsPage from '../pages/student/NotificationsPage'
-import DirectorHome from '../pages/director/Home'
+import DirectorHome from '../pages/director/MembersAdmin'
 import InstitutionData from '../pages/director/InstitutionData'
 
 export default function AppRouter() {
@@ -44,6 +44,8 @@ export default function AppRouter() {
 
         {/* Director */}
         <Route path="/director/messaging" element={<DirectorMessagingPage />} />
+        <Route path="/director/members" element={<DirectorHome/>} />
+        <Route path="/director/institution" element={<InstitutionData />} />
 
         {/* Teacher */}
         <Route path="/teacher/messaging" element={<TeacherMessagingPage />} />
@@ -54,9 +56,6 @@ export default function AppRouter() {
         <Route path="/student/rankings" element={<AcademicRanking />} />
         <Route path="/student/notifications" element={<NotificationsPage />} />
 
-        {/*Director */}
-        <Route path="/director/home" element={<DirectorHome />} />
-        <Route path="/director/institution" element={<InstitutionData />} />
       </Routes>
     </BrowserRouter>
   )
