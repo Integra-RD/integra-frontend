@@ -18,6 +18,7 @@ import InstitutionData from '../pages/director/InstitutionData'
 
 // Teacher
 import TeacherMessagingPage from '../pages/teacher/Messaging'
+import TeacherReports from '../pages/teacher/Reports'
 
 // Student
 import GradeHistory from '../pages/student/GradeHistory'
@@ -49,7 +50,9 @@ export default function AppRouter() {
         <Route path="/director/messaging" element={<DirectorMessagingPage />} />
 
         {/* Teacher */}
+        <Route path="/teacher/" element={<Navigate to="/teacher/reports" replace />} />
         <Route path="/teacher/messaging" element={<TeacherMessagingPage />} />
+        <Route path="/teacher/reports" element={<TeacherReports />} />
 
         {/* Student */}
         <Route path="/student/" element={<Navigate to="/student/grade-history" replace />} />
