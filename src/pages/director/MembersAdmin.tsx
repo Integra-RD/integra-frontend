@@ -7,6 +7,7 @@ import {
   CircleStackIcon,
   DocumentMagnifyingGlassIcon,
   HomeIcon,
+  MegaphoneIcon,
   UsersIcon
 } from '@heroicons/react/24/outline'
 import LayoutWrapper from '../../components/LayoutWrapper'
@@ -50,12 +51,12 @@ const DirectorHome: React.FC = () => {
   const perPage = 3
 
   const handlePersonTypeChange = (type: string) => {
-    if (type === 'all') {
+    if (type === 'student') {
       setActiveView('students')
       setFilteredData(mockSchools.filter(item => item.type === 'student'))
     } else {
-      setActiveView(type as 'students' | 'teachers')
-      setFilteredData(mockSchools.filter(item => item.type === type))
+      setActiveView('teachers')
+      setFilteredData(mockSchools.filter(item => item.type === 'teacher'))
     }
   }
 
@@ -77,6 +78,12 @@ const DirectorHome: React.FC = () => {
       icon: <DocumentMagnifyingGlassIcon className="w-5 h-5" />,
       active: location.pathname === '/director/reports',
       onClick: () => navigate('/director/report')
+    },
+    {
+      label: 'Comunicaciones',
+      icon: <MegaphoneIcon className="w-5 h-5" />,
+      active: location.pathname === '/director/messaging',
+      onClick: () => navigate('/director/messaging')
     }
   ]
 

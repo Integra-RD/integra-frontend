@@ -3,7 +3,7 @@ import { getNavItemsByRole } from '../../utils/getNavItemsByRole'
 import LayoutWrapper from '../../components/LayoutWrapper'
 import MessagingLayout from '../../components/MessagingLayout'
 import type { Message } from '../../components/MessageInbox'
-import { BuildingLibraryIcon, DocumentMagnifyingGlassIcon, MegaphoneIcon } from '@heroicons/react/24/outline'
+import { BuildingLibraryIcon, DocumentMagnifyingGlassIcon, MegaphoneIcon, UsersIcon } from '@heroicons/react/24/outline'
 
 const mockMessages: Message[] = [
   {
@@ -39,7 +39,7 @@ const DirectorMessagingPage = () => {
           label: 'Reportes',
           icon: <DocumentMagnifyingGlassIcon className="w-5 h-5" />,
           active: location.pathname === '/director/reports',
-          onClick: () => navigate('/director/report')
+          onClick: () => navigate('/director/reports')
         },
         {
           label: 'Comunicaciones',
