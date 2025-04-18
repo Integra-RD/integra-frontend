@@ -5,6 +5,7 @@ import FileUploader from '../../components/FileUploader'
 import DataTable from '../../components/DataTable'
 import Dropdown from '../../components/Dropdown'
 import LayoutWrapper from '../../components/LayoutWrapper'
+import { getNavItemsByRole } from '../../utils/getNavItemsByRole'
 
 // Definición de interfaces
 interface Student {
@@ -13,6 +14,8 @@ interface Student {
   grade: number
   avg: number
 }
+
+// TODO: Fix logic related to grades and averages; Add snackbars for feedback for processes
 
 // Datos de prueba
 const initialStudents: Student[] = [
@@ -43,19 +46,7 @@ const Reports: React.FC = () => {
   const [selectedPeriod, setSelectedPeriod] = useState(periods[0])
 
   // Configuración de navegación para Topbar
-  const navItems = [
-    {
-      label: 'Reportes',
-      icon: <></>,
-      active: true
-    },
-    {
-      label: 'Comunicación',
-      icon: <></>,
-      active: location.pathname === '/teacher/messaging',
-      onClick: () => navigate('/teacher/messaging')
-    }
-  ]
+  const navItems = getNavItemsByRole('teacher', location, navigate)
 
   // Cabeceras para DataTable
   const tableHeaders = [

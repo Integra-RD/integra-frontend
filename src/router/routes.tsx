@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+
 // Auth
 import Login from '../pages/auth/Login'
 import Recovery from '../pages/auth/Recovery'
@@ -12,13 +13,13 @@ import AuditLog from '../pages/ministry/AuditLog'
 import MinistryMessagingPage from '../pages/ministry/Messaging'
 
 // Director
-import DirectorMessagingPage from '../pages/director/Messaging'
 import DirectorHome from '../pages/director/MembersAdmin'
 import InstitutionData from '../pages/director/InstitutionData'
+import DirectorMessagingPage from '../pages/director/Messaging'
 
 // Teacher
-import TeacherMessagingPage from '../pages/teacher/Messaging'
 import TeacherReports from '../pages/teacher/Reports'
+import TeacherMessagingPage from '../pages/teacher/Messaging'
 
 // Student
 import GradeHistory from '../pages/student/GradeHistory'
@@ -45,14 +46,15 @@ export default function AppRouter() {
         <Route path="/ministry/messaging" element={<MinistryMessagingPage />} />
 
         {/* Director */}
+        <Route path="/director/" element={<Navigate to="/director/members" replace />} />
         <Route path="/director/members" element={<DirectorHome />} />
         <Route path="/director/institution" element={<InstitutionData />} />
         <Route path="/director/messaging" element={<DirectorMessagingPage />} />
 
         {/* Teacher */}
         <Route path="/teacher/" element={<Navigate to="/teacher/reports" replace />} />
-        <Route path="/teacher/messaging" element={<TeacherMessagingPage />} />
         <Route path="/teacher/reports" element={<TeacherReports />} />
+        <Route path="/teacher/messaging" element={<TeacherMessagingPage />} />
 
         {/* Student */}
         <Route path="/student/" element={<Navigate to="/student/grade-history" replace />} />
