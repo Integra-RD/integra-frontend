@@ -13,6 +13,8 @@ import MinistryMessagingPage from '../pages/ministry/Messaging'
 
 // Director
 import DirectorMessagingPage from '../pages/director/Messaging'
+import DirectorHome from '../pages/director/MembersAdmin'
+import InstitutionData from '../pages/director/InstitutionData'
 
 // Teacher
 import TeacherMessagingPage from '../pages/teacher/Messaging'
@@ -42,6 +44,8 @@ export default function AppRouter() {
         <Route path="/ministry/messaging" element={<MinistryMessagingPage />} />
 
         {/* Director */}
+        <Route path="/director/members" element={<DirectorHome />} />
+        <Route path="/director/institution" element={<InstitutionData />} />
         <Route path="/director/messaging" element={<DirectorMessagingPage />} />
 
         {/* Teacher */}

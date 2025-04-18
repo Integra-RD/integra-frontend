@@ -3,7 +3,8 @@ import {
   ArrowTopRightOnSquareIcon,
   Cog8ToothIcon,
   ArrowDownTrayIcon,
-  TrashIcon
+  TrashIcon,
+  PencilSquareIcon
 } from '@heroicons/react/24/outline'
 import { cn } from '../utils/cn'
 
@@ -26,6 +27,8 @@ interface ViewCardProps {
   onDownloadClick?: () => void
   showDelete?: boolean
   onDeleteClick?: () => void
+  showEditLink?: boolean
+  onEditClick?: () => void
 }
 
 const ViewCard: React.FC<ViewCardProps> = ({
@@ -46,7 +49,9 @@ const ViewCard: React.FC<ViewCardProps> = ({
   showDownloadLink = false,
   onDownloadClick,
   showDelete = false,
-  onDeleteClick
+  onDeleteClick,
+  showEditLink = false,
+  onEditClick
 }) => {
   const isCompact = variant === 'compact'
 
@@ -103,7 +108,7 @@ const ViewCard: React.FC<ViewCardProps> = ({
 
       {children}
 
-      {(showExternalLink || showInternalLink || showDownloadLink) && (
+      {(showExternalLink || showInternalLink || showDownloadLink || showEditLink) && (
         <div className="absolute top-3 right-3 flex items-center gap-2">
           {showDownloadLink && (
             <ArrowDownTrayIcon
@@ -134,6 +139,14 @@ const ViewCard: React.FC<ViewCardProps> = ({
               onClick={onDeleteClick}
               title="Eliminar"
               className="w-5 h-5 cursor-pointer text-slate-400 hover:text-red-500 transition"
+            />
+          )}
+
+          {showEditLink && (
+            <PencilSquareIcon
+              onClick={onEditClick}
+              title="Editar"
+              className="w-5 h-5 cursor-pointer text-slate-400 hover:text-blue-600 transition"
             />
           )}
         </div>

@@ -38,14 +38,37 @@ const ChartWrapper: React.FC<ChartWrapperProps> = ({
   options = {},
   className = ''
 }) => {
+  const baseOptions = {
+    ...options,
+    onHover: (event: any, chartElement: any[]) => {
+      if (chartElement.length > 0) {
+        event.native.target.style.cursor = 'pointer'
+      } else {
+        event.native.target.style.cursor = 'default'
+      }
+    },
+    plugins: {
+      ...options.plugins,
+      legend: {
+        ...options.plugins?.legend,
+        onHover: (e: any) => {
+          e.native.target.style.cursor = 'pointer'
+        },
+        onLeave: (e: any) => {
+          e.native.target.style.cursor = 'default'
+        }
+      }
+    }
+  }
+
   const renderChart = () => {
     switch (type) {
       case 'bar':
-        return <Bar data={data} options={options} />
+        return <Bar data={data} options={baseOptions} />
       case 'line':
-        return <Line data={data} options={options} />
+        return <Line data={data} options={baseOptions} />
       case 'pie':
-        return <Pie data={data} options={options} />
+        return <Pie data={data} options={baseOptions} />
       default:
         return <div className="text-red-500">Tipo de gráfico no soportado</div>
     }
