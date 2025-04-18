@@ -1,17 +1,8 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import React, { useState } from 'react'
-
-import {
-  AcademicCapIcon,
-  BuildingLibraryIcon,
-  CircleStackIcon,
-  DocumentMagnifyingGlassIcon,
-  HomeIcon,
-  MegaphoneIcon,
-  UsersIcon
-} from '@heroicons/react/24/outline'
 import LayoutWrapper from '../../components/LayoutWrapper'
 import DataTable from '../../components/DataTable'
+import { getNavItemsByRole } from '../../utils/getNavItemsByRole'
 
 const mockSchools = Array.from({ length: 12 }, (_, i) => {
   const baseId = 53849 + i
@@ -42,13 +33,10 @@ const DirectorHome: React.FC = () => {
   const user = { name: 'Juan Pérez', id: '0034' }
   const location = useLocation()
   const navigate = useNavigate()
-  const [currentPage, setCurrentPage] = useState(1)
   const [activeView, setActiveView] = useState<'students' | 'teachers'>('students')
   const [filteredData, setFilteredData] = useState(
     mockSchools.filter(item => item.type === 'student')
   )
-
-  const perPage = 3
 
   const handlePersonTypeChange = (type: string) => {
     if (type === 'student') {
@@ -60,32 +48,7 @@ const DirectorHome: React.FC = () => {
     }
   }
 
-  const navItems = [
-    {
-      label: 'Gestión de Personas',
-      icon: <UsersIcon className="w-5 h-5" />,
-      active: location.pathname === '/director/members',
-      onClick: () => navigate('/director/members')
-    },
-    {
-      label: 'Gestión de Centro Educativo',
-      icon: <BuildingLibraryIcon className="w-5 h-5" />,
-      active: location.pathname === '/director/institution',
-      onClick: () => navigate('/director/institution')
-    },
-    {
-      label: 'Reportes',
-      icon: <DocumentMagnifyingGlassIcon className="w-5 h-5" />,
-      active: location.pathname === '/director/reports',
-      onClick: () => navigate('/director/report')
-    },
-    {
-      label: 'Comunicaciones',
-      icon: <MegaphoneIcon className="w-5 h-5" />,
-      active: location.pathname === '/director/messaging',
-      onClick: () => navigate('/director/messaging')
-    }
-  ]
+  const navItems = getNavItemsByRole('director', location, navigate)
 
   const studentHeaders = [
     { label: 'ID', key: 'id' },
@@ -110,18 +73,18 @@ const DirectorHome: React.FC = () => {
         data={filteredData}
         dropdownLabel="Curso"
         dropdownOptions={[
-          'Primero de básica',
-          'Segundo de básica',
-          'Tercero de básica',
-          'Cuarto de básica',
-          'Quinto de básica',
-          'Sexto de básica',
-          'Primero de secundaria',
-          'Segundo de secundaria',
-          'Tercero de secundaria',
-          'Cuarto de secundaria',
-          'Quinto de secundaria',
-          'Sexto de secundaria'
+          '1ro de básica',
+          '2do de básica',
+          '3ro de básica',
+          '4to de básica',
+          '5to de básica',
+          '6to de básica',
+          '1ro de secundaria',
+          '2do de secundaria',
+          '3ro de secundaria',
+          '4to de secundaria',
+          '5to de secundaria',
+          '6to de secundaria'
         ]}
         extraFilters="with-person-type"
         onPersonTypeChange={handlePersonTypeChange}

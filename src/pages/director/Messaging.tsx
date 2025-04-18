@@ -3,7 +3,6 @@ import { getNavItemsByRole } from '../../utils/getNavItemsByRole'
 import LayoutWrapper from '../../components/LayoutWrapper'
 import MessagingLayout from '../../components/MessagingLayout'
 import type { Message } from '../../components/MessageInbox'
-import { BuildingLibraryIcon, DocumentMagnifyingGlassIcon, MegaphoneIcon, UsersIcon } from '@heroicons/react/24/outline'
 
 const mockMessages: Message[] = [
   {
@@ -21,33 +20,7 @@ const DirectorMessagingPage = () => {
   const user = { name: 'Laura García', id: 'D123' }
   const location = useLocation()
   const navigate = useNavigate()
-
-    const navItems = [
-        {
-          label: 'Gestión de Personas',
-          icon: <UsersIcon className="w-5 h-5" />,
-          active: location.pathname === '/director/members',
-          onClick: () => navigate('/director/members')
-        },
-        {
-          label: 'Gestión de Centro Educativo',
-          icon: <BuildingLibraryIcon className="w-5 h-5" />,
-          active: location.pathname === '/director/institution',
-          onClick: () => navigate('/director/institution')
-        },
-        {
-          label: 'Reportes',
-          icon: <DocumentMagnifyingGlassIcon className="w-5 h-5" />,
-          active: location.pathname === '/director/reports',
-          onClick: () => navigate('/director/reports')
-        },
-        {
-          label: 'Comunicaciones',
-          icon: <MegaphoneIcon className="w-5 h-5" />,
-          active: location.pathname === '/director/messaging',
-          onClick: () => navigate('/director/messaging')
-        }
-      ]
+  const navItems = getNavItemsByRole('director', location, navigate)
 
   return (
     <LayoutWrapper title="Comunicaciones Internas" user={user} navItems={navItems}>

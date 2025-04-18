@@ -13,6 +13,8 @@ import MinistryMessagingPage from '../pages/ministry/Messaging'
 
 // Director
 import DirectorMessagingPage from '../pages/director/Messaging'
+import DirectorHome from '../pages/director/MembersAdmin'
+import InstitutionData from '../pages/director/InstitutionData'
 
 // Teacher
 import TeacherMessagingPage from '../pages/teacher/Messaging'
@@ -22,8 +24,6 @@ import GradeHistory from '../pages/student/GradeHistory'
 import GradeAverage from '../pages/student/GradeAverage'
 import AcademicRanking from '../pages/student/AcademicRanking'
 import NotificationsPage from '../pages/student/NotificationsPage'
-import DirectorHome from '../pages/director/MembersAdmin'
-import InstitutionData from '../pages/director/InstitutionData'
 
 export default function AppRouter() {
   return (
@@ -44,9 +44,9 @@ export default function AppRouter() {
         <Route path="/ministry/messaging" element={<MinistryMessagingPage />} />
 
         {/* Director */}
-        <Route path="/director/messaging" element={<DirectorMessagingPage />} />
-        <Route path="/director/members" element={<DirectorHome/>} />
+        <Route path="/director/members" element={<DirectorHome />} />
         <Route path="/director/institution" element={<InstitutionData />} />
+        <Route path="/director/messaging" element={<DirectorMessagingPage />} />
 
         {/* Teacher */}
         <Route path="/teacher/messaging" element={<TeacherMessagingPage />} />
@@ -57,7 +57,6 @@ export default function AppRouter() {
         <Route path="/student/grade-average" element={<GradeAverage />} />
         <Route path="/student/rankings" element={<AcademicRanking />} />
         <Route path="/student/notifications" element={<NotificationsPage />} />
-
       </Routes>
     </BrowserRouter>
   )

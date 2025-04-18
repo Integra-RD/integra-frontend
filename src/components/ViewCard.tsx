@@ -146,9 +146,9 @@ const ViewCard: React.FC<ViewCardProps> = ({
             <PencilSquareIcon
               onClick={onEditClick}
               title="Editar"
-              className="w-5 h-5 cursor-pointer text-slate-400 hover:text-red-500 transition"
+              className="w-5 h-5 cursor-pointer text-slate-400 hover:text-blue-600 transition"
             />
-          )}    
+          )}
         </div>
       )}
     </div>
