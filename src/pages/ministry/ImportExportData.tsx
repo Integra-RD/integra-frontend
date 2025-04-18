@@ -1,19 +1,16 @@
 import React, { useState } from 'react'
 import {
-  HomeIcon,
-  AcademicCapIcon,
   CircleStackIcon,
-  DocumentMagnifyingGlassIcon,
   CalendarDaysIcon,
   BuildingLibraryIcon,
   InboxArrowDownIcon,
   CircleStackIcon as RecordsIcon,
-  TrophyIcon,
-  MegaphoneIcon
+  TrophyIcon
 } from '@heroicons/react/24/outline'
 import { useLocation, useNavigate } from 'react-router-dom'
 import LayoutWrapper from '../../components/LayoutWrapper'
 import ViewCard from '../../components/ViewCard'
+import { getNavItemsByRole } from '../../utils/getNavItemsByRole'
 
 const submissions = [
   { name: 'Colegio Nacional Ejemplo', date: '04/06/2025', period: 'Semestre Enero - Junio 2025' },
@@ -27,6 +24,7 @@ const ImportExportData: React.FC = () => {
   const user = { name: 'Juan Pérez', id: '0034' }
   const location = useLocation()
   const navigate = useNavigate()
+  const navItems = getNavItemsByRole('ministry', location, navigate)
 
   const [activeTab, setActiveTab] = useState<'recibidos' | 'registrados'>('recibidos')
   const [currentPage, setCurrentPage] = useState(1)
@@ -34,39 +32,6 @@ const ImportExportData: React.FC = () => {
   const perPage = 3
   const totalPages = Math.ceil(submissions.length / perPage)
   const currentSubmissions = submissions.slice((currentPage - 1) * perPage, currentPage * perPage)
-
-  const navItems = [
-    {
-      label: 'Inicio',
-      icon: <HomeIcon className="w-5 h-5" />,
-      active: location.pathname === '/ministry/home',
-      onClick: () => navigate('/ministry/home')
-    },
-    {
-      label: 'Becas y Programas',
-      icon: <AcademicCapIcon className="w-5 h-5" />,
-      active: location.pathname === '/ministry/scholarships',
-      onClick: () => navigate('/ministry/scholarships')
-    },
-    {
-      label: 'I/O de Datos',
-      icon: <CircleStackIcon className="w-5 h-5" />,
-      active: location.pathname === '/ministry/data',
-      onClick: () => navigate('/ministry/data')
-    },
-    {
-      label: 'Auditorías',
-      icon: <DocumentMagnifyingGlassIcon className="w-5 h-5" />,
-      active: location.pathname === '/ministry/audits',
-      onClick: () => navigate('/ministry/audits')
-    },
-    {
-      label: 'Comunicaciones',
-      icon: <MegaphoneIcon className="w-5 h-5" />,
-      active: location.pathname === '/ministry/messaging',
-      onClick: () => navigate('/ministry/messaging')
-    }
-  ]
 
   return (
     <LayoutWrapper

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { BellIcon } from '@heroicons/react/24/outline'
+import { BellIcon, ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline'
 import integraLogo from '../assets/integraLogo.svg'
 
 interface NavItem {
@@ -30,6 +30,11 @@ const Topbar: React.FC<TopbarProps> = ({ navItems, user }) => {
     .slice(0, 2)
     .toUpperCase()
 
+  const handleLogout = () => {
+    // TODO: hook this into auth logic
+    navigate('/login')
+  }
+
   return (
     <div className="sticky top-0 z-50 px-8 sm:px-16 lg:px-25 2xl:px-86 py-2 bg-white/80 backdrop-blur-sm">
       <div className="flex items-center justify-between">
@@ -53,10 +58,15 @@ const Topbar: React.FC<TopbarProps> = ({ navItems, user }) => {
             ))}
           </div>
 
-          <div className="flex items-center space-x-4 bg-[#f5faff]/90 backdrop-blur-md px-4 py-2 rounded-full shadow-sm">
-            <button onClick={() => navigate('/student/notifications')} aria-label="Notificaciones">
-              <BellIcon className="w-5 h-5 text-gray-700 hover:text-blue-600 transition" />
+          <div className="flex items-center space-x-3 bg-[#f5faff]/90 backdrop-blur-md px-4 py-2 rounded-full shadow-sm">
+            <button
+              onClick={() => navigate('/student/notifications')}
+              aria-label="Notificaciones"
+              className="hover:text-blue-600 transition"
+            >
+              <BellIcon className="w-5 h-5 text-gray-700" />
             </button>
+
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 rounded-full bg-[#2c6e91] text-white flex items-center justify-center text-sm font-semibold">
                 {initials}
@@ -66,6 +76,14 @@ const Topbar: React.FC<TopbarProps> = ({ navItems, user }) => {
                 <div className="text-gray-500 text-xs">ID{user.id}</div>
               </div>
             </div>
+
+            <button
+              onClick={handleLogout}
+              className="flex items-center space-x-1 text-sm text-red-600 hover:text-red-700 px-2 py-1 transition rounded hover:bg-red-50"
+            >
+              <ArrowRightStartOnRectangleIcon className="w-4 h-4" />
+              <span>Cerrar sesión</span>
+            </button>
           </div>
         </div>
       </div>

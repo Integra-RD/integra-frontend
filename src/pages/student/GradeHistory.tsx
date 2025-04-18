@@ -1,8 +1,8 @@
 import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { ClockIcon, ChartBarIcon, TrophyIcon } from '@heroicons/react/24/outline'
 import LayoutWrapper from '../../components/LayoutWrapper'
 import DataTable from '../../components/DataTable'
+import { getNavItemsByRole } from '../../utils/getNavItemsByRole'
 
 const baseGrades = [
   { subject: 'Cálculo', grade: 82, teacher: 'Vicente Fernández', average: 87.2 },
@@ -22,27 +22,7 @@ const mockGrades = Array.from({ length: 100 }, (_, i) => {
 const GradeHistory: React.FC = () => {
   const location = useLocation()
   const navigate = useNavigate()
-
-  const navItems = [
-    {
-      label: 'Historial',
-      icon: <ClockIcon className="w-5 h-5" />,
-      active: location.pathname === '/student/grade-history',
-      onClick: () => navigate('/student/grade-history')
-    },
-    {
-      label: 'Promedios',
-      icon: <ChartBarIcon className="w-5 h-5" />,
-      active: location.pathname === '/student/grade-average',
-      onClick: () => navigate('/student/grade-average')
-    },
-    {
-      label: 'Rankings',
-      icon: <TrophyIcon className="w-5 h-5" />,
-      active: location.pathname === '/student/rankings',
-      onClick: () => navigate('/student/rankings')
-    }
-  ]
+  const navItems = getNavItemsByRole('student', location, navigate)
 
   const user = { name: 'Juan Pérez', id: '0034' }
 

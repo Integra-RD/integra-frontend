@@ -1,14 +1,9 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-import {
-  UsersIcon,
-  BuildingLibraryIcon,
-  DocumentMagnifyingGlassIcon,
-  MegaphoneIcon
-} from '@heroicons/react/24/outline'
-
+import { getNavItemsByRole } from '../../utils/getNavItemsByRole'
 import LayoutWrapper from '../../components/LayoutWrapper'
 import MessagingLayout from '../../components/MessagingLayout'
 import type { Message } from '../../components/MessageInbox'
+import { BuildingLibraryIcon, DocumentMagnifyingGlassIcon, MegaphoneIcon } from '@heroicons/react/24/outline'
 
 const mockMessages: Message[] = [
   {

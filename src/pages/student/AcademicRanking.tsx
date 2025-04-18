@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { ClockIcon, ChartBarIcon, TrophyIcon } from '@heroicons/react/24/outline'
 import LayoutWrapper from '../../components/LayoutWrapper'
 import Dropdown from '../../components/Dropdown'
+import { getNavItemsByRole } from '../../utils/getNavItemsByRole'
 
 const academicRanking = [
   { name: 'Fernando Castillo', average: 9.8, grade: '3ro Secundaria', semester: '1er Semestre' },
@@ -48,6 +48,7 @@ const PodiumBar: React.FC<{
 const AcademicRanking: React.FC = () => {
   const location = useLocation()
   const navigate = useNavigate()
+  const navItems = getNavItemsByRole('student', location, navigate)
 
   const [selectedGrade, setSelectedGrade] = useState('Todos los grados')
   const [selectedSemester, setSelectedSemester] = useState('Todos los semestres')
@@ -61,27 +62,6 @@ const AcademicRanking: React.FC = () => {
   ]
 
   const semesterOptions = ['Todos los semestres', '1er Semestre', '2do Semestre']
-
-  const navItems = [
-    {
-      label: 'Historial',
-      icon: <ClockIcon className="w-5 h-5" />,
-      active: location.pathname === '/student/grade-history',
-      onClick: () => navigate('/student/grade-history')
-    },
-    {
-      label: 'Promedios',
-      icon: <ChartBarIcon className="w-5 h-5" />,
-      active: location.pathname === '/student/grade-average',
-      onClick: () => navigate('/student/grade-average')
-    },
-    {
-      label: 'Rankings',
-      icon: <TrophyIcon className="w-5 h-5" />,
-      active: location.pathname === '/student/rankings',
-      onClick: () => navigate('/student/rankings')
-    }
-  ]
 
   const user = { name: 'Juan Pérez', id: '0034' }
 
