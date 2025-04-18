@@ -30,16 +30,14 @@ const initialStudents: Student[] = [
 const subjects = ['Matemáticas', 'Español', 'Ciencias Naturales', 'Historia']
 const grades = ['5to de Secundaria', '4to de Secundaria', '3ro de Secundaria']
 const periods = ['2022-2023', '2021-2022', '2020-2021']
-  
 
 const Reports: React.FC = () => {
-
   const navigate = useNavigate()
-  const location = useLocation()  
+  const location = useLocation()
   // Estados
   const [isEditing, setIsEditing] = useState(false)
   const [students, setStudents] = useState<Student[]>(initialStudents)
-  const [isUploading, setIsUploading] = useState(false)
+  const [isUploading] = useState(false)
   const [selectedSubject, setSelectedSubject] = useState(subjects[0])
   const [selectedGrade, setSelectedGrade] = useState(grades[0])
   const [selectedPeriod, setSelectedPeriod] = useState(periods[0])
@@ -75,28 +73,6 @@ const Reports: React.FC = () => {
       )
     }
   }
-
-  // Manejador para procesar el archivo subido
-  /*const handleFileUpload = (file: File) => {
-    setIsUploading(true)
-    
-    setTimeout(() => {
-      console.log(`Procesando archivo: ${file.name}`)
-      // Aquí iría la lógica para procesar el archivo Excel
-      // Ejemplo
-      const mockImportedStudents: Student[] = [
-        { id: '20210008', name: 'Luis Miguel', grade: 89, avg: 91.2 },
-        { id: '20210009', name: 'Marco Antonio Solis', grade: 91, avg: 90.2 },
-        { id: '20210010', name: 'Juanes', grade: 85, avg: 81.8 },
-        { id: '20210011', name: 'Shakira', grade: 94, avg: 96.5 },
-        { id: '20210012', name: 'Enrique Iglesias', grade: 88, avg: 87.6 }
-      ]
-
-      setStudents([...mockImportedStudents])
-      setIsUploading(false)
-    }, 2000)
-  }
-  */
 
   // Función para renderizar celdas de calificación editables/no editables
   const renderGradeCell = (value: any, row: any) => {
@@ -199,12 +175,6 @@ const Reports: React.FC = () => {
           <ActionButton />
         </div>
       </div>
-
-      {/*
-        <div className="flex flex-wrap gap-4 mb-8">
-            <ActionButton />
-        </div>
-        */}
 
       {/* Tabla de datos */}
       <div className="table-auto w-full mb-8">

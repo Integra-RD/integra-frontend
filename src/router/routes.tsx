@@ -46,6 +46,7 @@ export default function AppRouter() {
         <Route path="/director/messaging" element={<DirectorMessagingPage />} />
 
         {/* Teacher */}
+        <Route path="/teacher/" element={<Navigate to="/teacher/reports" replace />} />
         <Route path="/teacher/messaging" element={<TeacherMessagingPage />} />
         <Route path="/teacher/reports" element={<TeacherReports />} />
 

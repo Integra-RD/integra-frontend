@@ -2,10 +2,10 @@ import React, { useState, useRef, useCallback } from 'react'
 import {
   ArrowUpTrayIcon,
   ExclamationCircleIcon,
-  DocumentIcon,
   CheckCircleIcon
 } from '@heroicons/react/24/outline'
 
+// TODO: Connect logic to uploading and show accurate feedback
 interface FileUploaderProps {
   /**
    * Función que se ejecuta cuando un archivo es seleccionado
