@@ -9,6 +9,7 @@ import {
   MapPinIcon,
   BriefcaseIcon,
   DevicePhoneMobileIcon,
+  MegaphoneIcon,
 } from '@heroicons/react/24/outline'
 import { useLocation, useNavigate } from 'react-router-dom'
 import LayoutWrapper from '../../components/LayoutWrapper'
@@ -164,6 +165,12 @@ const lineDataAvg = {
         active: location.pathname === '/director/reports',
         onClick: () => navigate('/director/report')
       },
+      {
+        label: 'Comunicaciones',
+        icon: <MegaphoneIcon className="w-5 h-5" />,
+        active: location.pathname === '/director/messaging',
+        onClick: () => navigate('/director/messaging')
+      }
     ]
   
     return (
