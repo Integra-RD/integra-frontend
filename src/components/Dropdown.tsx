@@ -11,7 +11,7 @@ interface DropdownProps {
 const Dropdown: React.FC<DropdownProps> = ({ label, options, selected, onChange, className }) => {
   return (
     <div className={`flex flex-col ${className}`}>
-      <label className="text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <label className="text-sm font-bold text-gray-700 mb-1">{label}</label>
       <select
         value={selected}
         onChange={e => onChange(e.target.value)}

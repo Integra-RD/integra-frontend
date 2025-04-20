@@ -180,7 +180,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
 
       {/* Instrucciones */}
       <div className="mt-6 p-4 bg-white/80 backdrop-blur-sm rounded-lg shadow-sm">
-        <p className="text-sm font-medium text-[#181C20] mb-2">Instrucciones:</p>
+        <p className="text-sm font-bold text-[#181C20] mb-2">Instrucciones:</p>
         <ul className="space-y-2">
           {instructions.map((instruction, index) => (
             <li key={index} className="flex items-start text-sm text-gray-600">

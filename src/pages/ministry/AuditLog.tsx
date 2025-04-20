@@ -127,10 +127,10 @@ const AuditLog: React.FC = () => {
       navItems={navItems}
       headerRightSection={
         <div className="flex gap-4 items-center text-sm">
-          <label className="flex gap-1 items-center">
+          <label className="flex gap-1 font-bold items-center">
             Filtrar Usuario
             <select
-              className="ml-1 border rounded-md px-2 py-1 text-sm cursor-pointer text-[#29638A]"
+              className="ml-1 border font-light rounded-md px-2 py-1 text-sm cursor-pointer text-[#29638A]"
               value={roleFilter}
               onChange={e => setRoleFilter(e.target.value)}
             >
@@ -142,10 +142,10 @@ const AuditLog: React.FC = () => {
             </select>
           </label>
 
-          <label className="flex gap-1 items-center">
+          <label className="flex gap-1 font-bold items-center">
             Filtrar Actividad
             <select
-              className="ml-1 border rounded-md px-2 py-1 text-sm cursor-pointer text-[#29638A]"
+              className="ml-1 border font-light rounded-md px-2 py-1 text-sm cursor-pointer text-[#29638A]"
               value={typeFilter}
               onChange={e => setTypeFilter(e.target.value)}
             >

@@ -366,7 +366,7 @@ const Scholarships: React.FC = () => {
               onExternalClick={() => window.open('https://educacion.gob.do', '_blank')}
               onInternalClick={() => navigate('/ministry/scholarships/crud')}
             >
-              <p className="text-sm text-gray-600">{s.description}</p>
+              <p className="text-sm font-medium text-gray-600">{s.description}</p>
               <div className="flex flex-wrap gap-3 mt-4">
                 {s.miniCards.map((card, i) => (
                   <div
@@ -375,8 +375,8 @@ const Scholarships: React.FC = () => {
                   >
                     {card.icon}
                     <div>
-                      <p className="text-xs text-gray-800">{card.title}</p>
-                      <p className="font-medium text-gray-800">{card.value}</p>
+                      <p className="text-xs font-semibold text-gray-800">{card.title}</p>
+                      <p className="font-light text-gray-800">{card.value}</p>
                     </div>
                   </div>
                 ))}
