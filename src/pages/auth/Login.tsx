@@ -120,7 +120,8 @@ const Login: React.FC = () => {
         student: '/student/grade-history',
         teacher: '/teacher/reports',
         director: '/director/members',
-        ministry: '/ministry/home'
+        ministry: '/ministry/home',
+        superadmin: '/student/grade-history'
       }
       navigate(homePaths[role], { replace: true })
     } catch (err: any) {

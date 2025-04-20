@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-type Role = 'student' | 'teacher' | 'director' | 'ministry' | null
+export type Role = 'superadmin' | 'student' | 'teacher' | 'director' | 'ministry' | null
 
 interface AuthState {
   accessToken: string | null
