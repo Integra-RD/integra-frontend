@@ -20,7 +20,6 @@ const DirectorMessagingPage = () => {
   const user = { name: 'Laura García', id: 'D123' }
   const location = useLocation()
   const navigate = useNavigate()
-
   const navItems = getNavItemsByRole('director', location, navigate)
 
   return (

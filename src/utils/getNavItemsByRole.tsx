@@ -35,14 +35,14 @@ export const getNavItemsByRole = (
         {
           label: 'Gestión de Personas',
           icon: <UsersIcon className="w-5 h-5" />,
-          active: location.pathname === '/director/personas',
-          onClick: () => navigate('/director/personas')
+          active: location.pathname === '/director/members',
+          onClick: () => navigate('/director/members')
         },
         {
           label: 'Gestión de Centro Educativo',
           icon: <BuildingLibraryIcon className="w-5 h-5" />,
-          active: location.pathname === '/director/centro',
-          onClick: () => navigate('/director/centro')
+          active: location.pathname === '/director/institution',
+          onClick: () => navigate('/director/institution')
         },
         {
           label: 'Reportes',
@@ -53,8 +53,8 @@ export const getNavItemsByRole = (
         {
           label: 'Comunicaciones',
           icon: <MegaphoneIcon className="w-5 h-5" />,
-          active: location.pathname === '/director/mensajes',
-          onClick: () => navigate('/director/mensajes')
+          active: location.pathname === '/director/messaging',
+          onClick: () => navigate('/director/messaging')
         }
       ]
 

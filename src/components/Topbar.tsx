@@ -2,6 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { BellIcon, ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline'
 import integraLogo from '../assets/integraLogo.svg'
+import { useAuthStore } from '../store/authStore'
 
 interface NavItem {
   label: string
@@ -22,7 +23,9 @@ interface TopbarProps {
 
 const Topbar: React.FC<TopbarProps> = ({ navItems, user }) => {
   const navigate = useNavigate()
+  const { logout: storeLogout } = useAuthStore()
 
+  // initials for avatar
   const initials = user.name
     .split(' ')
     .map(n => n[0])
@@ -31,16 +34,19 @@ const Topbar: React.FC<TopbarProps> = ({ navItems, user }) => {
     .toUpperCase()
 
   const handleLogout = () => {
-    // TODO: hook this into auth logic
-    navigate('/login')
+    // clear tokens & auth state
+    storeLogout()
+    // navigate back to login
+    navigate('/login', { replace: true })
   }
 
   return (
-    <div className="sticky top-0 z-50 px-8 sm:px-16 lg:px-25 2xl:px-86 py-2 bg-white/80 backdrop-blur-sm">
+    <div className="sticky top-0 z-50 px-8 sm:px-16 lg:px-20 2xl:px-80 py-2 bg-white/80 backdrop-blur-sm">
       <div className="flex items-center justify-between">
-        <img src={integraLogo} alt="Logo INTEGRA" className="h-10 w-auto" />
+        <img src={integraLogo} alt="INTEGRA Logo" className="h-10 w-auto" />
 
         <div className="flex items-center space-x-4">
+          {/* Nav items */}
           <div className="flex items-center space-x-4 bg-[#f5faff]/90 backdrop-blur-md px-4 py-2 rounded-full shadow-sm">
             {navItems.map(({ label, icon, active, onClick }, idx) => (
               <button
@@ -58,7 +64,10 @@ const Topbar: React.FC<TopbarProps> = ({ navItems, user }) => {
             ))}
           </div>
 
+          {/* // TODO: Bell notif should redirect to correct page based on role  */}
+          {/* User area */}
           <div className="flex items-center space-x-3 bg-[#f5faff]/90 backdrop-blur-md px-4 py-2 rounded-full shadow-sm">
+            {/* notifications */}
             <button
               onClick={() => navigate('/student/notifications')}
               aria-label="Notificaciones"
@@ -67,16 +76,18 @@ const Topbar: React.FC<TopbarProps> = ({ navItems, user }) => {
               <BellIcon className="w-5 h-5 text-gray-700" />
             </button>
 
+            {/* avatar + name */}
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 rounded-full bg-[#2c6e91] text-white flex items-center justify-center text-sm font-semibold">
                 {initials}
               </div>
               <div className="text-sm leading-tight">
                 <div className="text-gray-900 font-medium">{user.name}</div>
-                <div className="text-gray-500 text-xs">ID{user.id}</div>
+                <div className="text-gray-500 text-xs">ID {user.id}</div>
               </div>
             </div>
 
+            {/* logout */}
             <button
               onClick={handleLogout}
               className="flex items-center space-x-1 text-sm text-red-600 hover:text-red-700 px-2 py-1 transition rounded hover:bg-red-50"

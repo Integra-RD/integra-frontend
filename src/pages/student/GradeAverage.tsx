@@ -106,11 +106,11 @@ const GradeAverage: React.FC = () => {
           <div className="bg-gray-50 rounded-lg p-3">
             <div className="flex items-center gap-2 mb-1">
               <FireIcon className="w-4 h-4 text-orange-500" />
-              <p className="text-xs font-medium text-gray-700 uppercase">
+              <p className="text-xs font-bold text-gray-700 uppercase">
                 Asignatura con mejor Promedio
               </p>
             </div>
-            <p className="text-sm font-medium text-gray-800">Física Cuántica</p>
+            <p className="text-sm font-light text-gray-800">Física Cuántica</p>
           </div>
         </div>
 
@@ -132,12 +132,12 @@ const GradeAverage: React.FC = () => {
 
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">Mejor período</span>
-              <span className="text-sm font-medium">4to Secundaria (89)</span>
+              <span className="text-sm font-bold text-gray-600">Mejor período</span>
+              <span className="text-sm font-light">4to Secundaria (89)</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">Período más bajo</span>
-              <span className="text-sm font-medium">3ro Secundaria (75)</span>
+              <span className="text-sm font-bold text-gray-600">Período más bajo</span>
+              <span className="text-sm font-light">3ro Secundaria (75)</span>
             </div>
           </div>
         </div>
