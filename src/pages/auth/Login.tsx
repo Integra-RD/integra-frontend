@@ -1,10 +1,9 @@
-import React, { useState, useEffect, type FormEvent, type ChangeEvent } from 'react'
+import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   EnvelopeIcon,
   LockClosedIcon,
   UserIcon,
-  PhoneIcon,
   BuildingLibraryIcon,
   BuildingOffice2Icon,
   BookOpenIcon,
@@ -18,6 +17,16 @@ import globeImage from '../../assets/globe.svg'
 import GradientButton from '../../components/GradientButton'
 import RedirectLink from '../../components/RedirectLink'
 import { useAuth, FrontendRole } from '../../hooks/useAuth'
+import api from '../../services/api'
+import {
+  DirectorAccountRequestSchema,
+  MinerdAccountRequestSchema
+} from '../../schemas/accountRequestSchema'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
+// TODO: Clean up for max readility and code splitting
+// Adjust endpoint for Director
 
 interface FormInputProps {
   id: string
@@ -27,9 +36,9 @@ interface FormInputProps {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void
   placeholder: string
   icon: React.ReactNode
+  required?: boolean
   marginBottom?: string
 }
-
 const FormInput: React.FC<FormInputProps> = ({
   id,
   label,
@@ -38,7 +47,8 @@ const FormInput: React.FC<FormInputProps> = ({
   onChange,
   placeholder,
   icon,
-  marginBottom = 'mb-4'
+  marginBottom = 'mb-4',
+  required = true
 }) => (
   <div className={marginBottom}>
     <label htmlFor={id} className="block text-gray-800 text-lg mb-1">
@@ -52,13 +62,8 @@ const FormInput: React.FC<FormInputProps> = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="
-          w-full pl-12 pr-4 py-2
-          border border-gray-300 rounded-md
-          text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300
-          transition-all duration-200
-        "
-        required
+        required={required}
+        className="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-200"
       />
     </div>
   </div>
@@ -67,109 +72,222 @@ const FormInput: React.FC<FormInputProps> = ({
 type Grade = {
   id: number
   name: string
+  seccion: string
   classes: string[]
   newClassName: string
   collapsed: boolean
 }
 
-const Login: React.FC = () => {
-  const navigate = useNavigate()
-  const { login } = useAuth()
+const TIPOS_DE_CENTROS = [
+  { id: 1, label: 'Inicial' },
+  { id: 2, label: 'Básico' },
+  { id: 3, label: 'Medio' },
+  { id: 4, label: 'Técnico' }
+]
 
-  // Login form
+const Login: React.FC = () => {
+  const { login } = useAuth()
+  const navigate = useNavigate()
+
   const [usernameOrEmail, setUsernameOrEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
-  // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalType, setModalType] = useState<'director' | 'minerd'>('director')
+  const [submitting, setSubmitting] = useState(false)
 
-  // Director form state
-  const [newGradeName, setNewGradeName] = useState('')
-  const [grades, setGrades] = useState<Grade[]>([])
-  const [schoolName, setSchoolName] = useState('')
-  const [schoolType, setSchoolType] = useState('')
-
-  // MINERD form state
-  const [minerdName, setMinerdName] = useState('')
+  const [minerdFirstName, setMinerdFirstName] = useState('')
+  const [minerdLastName, setMinerdLastName] = useState('')
   const [minerdEmail, setMinerdEmail] = useState('')
 
-  // Prevent scroll & ESC to close modal
-  useEffect(() => {
-    document.body.style.overflow = isModalOpen ? 'hidden' : ''
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsModalOpen(false)
-    }
-    window.addEventListener('keydown', onKey)
-    return () => {
-      window.removeEventListener('keydown', onKey)
-      document.body.style.overflow = ''
-    }
-  }, [isModalOpen])
+  const [directorFirstName, setDirectorFirstName] = useState('')
+  const [directorLastName, setDirectorLastName] = useState('')
+  const [directorEmail, setDirectorEmail] = useState('')
+  const [schoolName, setSchoolName] = useState('')
+  const [direccionCalle, setDireccionCalle] = useState('')
+  const [direccionVivienda, setDireccionVivienda] = useState('')
+  const [sectorId, setSectorId] = useState<number | null>(null)
+  const [tiposCentro, setTiposCentro] = useState<number[]>([])
+  const [sectores, setSectores] = useState<{ id: number; nombre: string }[]>([])
 
-  // Handle login submit
+  const [grades, setGrades] = useState<Grade[]>([])
+  const [newGradeName, setNewGradeName] = useState('')
+
+  useEffect(() => {
+    if (!isModalOpen || modalType !== 'director') return
+    api
+      .get('/auth/auth-dropdown-options/', { params: { sectores: 'yes' } })
+      .then(({ data }) =>
+        setSectores(
+          (data.sectores ?? []).map((s: any) => ({
+            id: s.id,
+            nombre: s.nombre_sector
+          }))
+        )
+      )
+      .catch(() => toast.error('No se pudieron cargar los sectores'))
+  }, [isModalOpen, modalType])
+
+  const autoPassword = () => crypto.randomUUID().slice(0, 8)
+  const resetModal = () => {
+    setMinerdFirstName('')
+    setMinerdLastName('')
+    setMinerdEmail('')
+    setDirectorFirstName('')
+    setDirectorLastName('')
+    setDirectorEmail('')
+    setSchoolName('')
+    setDireccionCalle('')
+    setDireccionVivienda('')
+    setSectorId(null)
+    setTiposCentro([])
+    setGrades([])
+    setNewGradeName('')
+    setError(null)
+  }
+
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault()
     setError(null)
     setLoading(true)
     try {
       const role = await login(usernameOrEmail.trim(), password)
-      const homePaths: Record<FrontendRole, string> = {
+      const homePath: Record<FrontendRole, string> = {
         student: '/student/grade-history',
         teacher: '/teacher/reports',
         director: '/director/members',
         ministry: '/ministry/home',
         superadmin: '/student/grade-history'
       }
-      navigate(homePaths[role], { replace: true })
+      navigate(homePath[role], { replace: true })
     } catch (err: any) {
-      setError(err.response?.data?.detail || err.message || 'Error al iniciar sesión')
+      setError(err.response?.data?.detail ?? 'Error al iniciar sesión')
       setLoading(false)
     }
   }
 
-  // Switch between director and MINERD in modal
-  const switchModal = (type: 'director' | 'minerd') => {
-    setModalType(type)
-    setNewGradeName('')
-    setGrades([])
-    setSchoolName('')
-    setSchoolType('')
-    setMinerdName('')
-    setMinerdEmail('')
+  const solicitarCuentaMinerd = async () => {
+    if (!minerdFirstName.trim() || !minerdLastName.trim()) {
+      return toast.error('Escribe nombre y apellido')
+    }
+
+    const payload = {
+      full_name: `${minerdFirstName.trim()} ${minerdLastName.trim()}`,
+      email: minerdEmail.trim()
+    }
+    const check = MinerdAccountRequestSchema.safeParse(payload)
+    if (!check.success) {
+      return toast.error(check.error.errors[0].message)
+    }
+
+    setSubmitting(true)
+    try {
+      await api.post('/auth/solicitar-cuenta/minerd', payload)
+      toast.success('Solicitud enviada')
+      setIsModalOpen(false)
+      resetModal()
+    } catch (err: any) {
+      toast.error(err.response?.data?.message ?? 'Error al enviar la solicitud')
+    } finally {
+      setSubmitting(false)
+    }
   }
+
+  const solicitarCuentaDirector = async () => {
+    let centroId: number
+    try {
+      const { data } = await api.post('/academic/centro-educativo/', {
+        nombre_centro_educativo: schoolName,
+        direccion: {
+          calle: direccionCalle,
+          informacion_vivienda: direccionVivienda,
+          sector_id: sectorId
+        },
+        tipos_centro: tiposCentro
+      })
+      centroId = data.id
+    } catch (err: any) {
+      return toast.error(err.response?.data?.message ?? 'No se pudo crear el centro educativo')
+    }
+
+    const payload = {
+      first_name: directorFirstName,
+      last_name: directorLastName,
+      email: directorEmail,
+      password: autoPassword(),
+      role_id: 5,
+      centro_educativo_data: { id: centroId },
+      cursos_data: grades.map(g => ({
+        nombre_curso: g.name,
+        nivel_educativo: g.name.includes('Primaria') ? 'Primaria' : 'Secundaria',
+        seccion: g.seccion,
+        asignaturas_curso: g.classes.map(c => ({
+          nombre_asignatura: c,
+          descripcion_asignatura: ''
+        }))
+      }))
+    }
+    const check = DirectorAccountRequestSchema.safeParse(payload)
+    if (!check.success) {
+      return toast.error(check.error.errors[0].message)
+    }
+
+    setSubmitting(true)
+    try {
+      await api.post('/auth/solicitar-cuenta', payload)
+      toast.success('Solicitud enviada')
+      setIsModalOpen(false)
+      resetModal()
+    } catch (err: any) {
+      toast.error(err.response?.data?.message ?? 'Error al enviar la solicitud')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  const handleAccountRequest = () =>
+    modalType === 'minerd' ? solicitarCuentaMinerd() : solicitarCuentaDirector()
 
   const addGrade = () => {
     if (!newGradeName.trim()) return
-    setGrades(prev => [
-      ...prev,
-      { id: Date.now(), name: newGradeName.trim(), classes: [], newClassName: '', collapsed: false }
+    setGrades(g => [
+      ...g,
+      {
+        id: Date.now(),
+        name: newGradeName.trim(),
+        seccion: '',
+        classes: [],
+        newClassName: '',
+        collapsed: false
+      }
     ])
     setNewGradeName('')
   }
-  const removeGrade = (id: number) => setGrades(prev => prev.filter(g => g.id !== id))
+  const removeGrade = (id: number) => setGrades(g => g.filter(x => x.id !== id))
   const toggleCollapse = (id: number) =>
-    setGrades(prev => prev.map(g => (g.id === id ? { ...g, collapsed: !g.collapsed } : g)))
-  const updateNewClass = (id: number, val: string) =>
-    setGrades(prev => prev.map(g => (g.id === id ? { ...g, newClassName: val } : g)))
+    setGrades(g => g.map(x => (x.id === id ? { ...x, collapsed: !x.collapsed } : x)))
+  const updateNewClass = (id: number, v: string) =>
+    setGrades(g => g.map(x => (x.id === id ? { ...x, newClassName: v } : x)))
   const addClass = (id: number) =>
-    setGrades(prev =>
-      prev.map(g =>
-        g.id !== id || !g.newClassName.trim()
-          ? g
-          : { ...g, classes: [...g.classes, g.newClassName.trim()], newClassName: '' }
+    setGrades(g =>
+      g.map(x =>
+        x.id !== id || !x.newClassName.trim()
+          ? x
+          : { ...x, classes: [...x.classes, x.newClassName.trim()], newClassName: '' }
       )
     )
   const removeClass = (id: number, idx: number) =>
-    setGrades(prev =>
-      prev.map(g => (g.id === id ? { ...g, classes: g.classes.filter((_, i) => i !== idx) } : g))
+    setGrades(g =>
+      g.map(x => (x.id !== id ? x : { ...x, classes: x.classes.filter((_, i) => i !== idx) }))
     )
-
+  const toggleTipoCentro = (id: number) =>
+    setTiposCentro(t => (t.includes(id) ? t.filter(x => x !== id) : [...t, id]))
   return (
     <>
-      {/* ——— Login Screen ——— */}
+      <ToastContainer position="top-right" autoClose={4000} hideProgressBar />
+
       <div className="flex h-screen bg-white">
         <div className="flex flex-col items-center justify-center w-full lg:w-1/2 px-4 py-12">
           <img src={integraLogo} alt="INTEGRA Logo" className="w-12 mb-6" />
@@ -186,7 +304,7 @@ const Login: React.FC = () => {
 
           <form onSubmit={handleLogin} className="w-full max-w-md space-y-4">
             <FormInput
-              id="login-username"
+              id="login-user"
               label="Usuario o Correo"
               type="text"
               value={usernameOrEmail}
@@ -195,7 +313,7 @@ const Login: React.FC = () => {
               icon={<EnvelopeIcon className="w-6 h-6 text-gray-400" />}
             />
             <FormInput
-              id="login-password"
+              id="login-pass"
               label="Contraseña"
               type="password"
               value={password}
@@ -204,16 +322,9 @@ const Login: React.FC = () => {
               icon={<LockClosedIcon className="w-6 h-6 text-gray-400" />}
               marginBottom="mb-2"
             />
-
-            {error && <div className="text-red-500 text-sm">{error}</div>}
-
-            <GradientButton
-              type="submit"
-              disabled={loading}
-              className="w-full"
-              ariaLabel="Iniciar Sesión"
-            >
-              {loading ? 'Cargando...' : 'Iniciar Sesión'}
+            {error && <p className="text-red-500 text-sm">{error}</p>}
+            <GradientButton type="submit" disabled={loading} className="w-full">
+              {loading ? 'Cargando…' : 'Iniciar Sesión'}
             </GradientButton>
 
             <div className="flex justify-between text-sm mt-2">
@@ -223,22 +334,21 @@ const Login: React.FC = () => {
                 text="Solicitar Cuenta"
                 onClick={e => {
                   e.preventDefault()
-                  switchModal('director')
+                  setModalType('director')
                   setIsModalOpen(true)
                 }}
               />
             </div>
           </form>
         </div>
+
         <div className="hidden lg:block w-1/2 h-screen">
-          <img src={globeImage} alt="Globe on chalkboard" className="w-full h-full object-cover" />
+          <img src={globeImage} alt="Globe" className="w-full h-full object-cover" />
         </div>
       </div>
 
-      {/* ——— Modal ——— */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          {/* backdrop */}
           <div
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={() => setIsModalOpen(false)}
@@ -257,41 +367,46 @@ const Login: React.FC = () => {
             </button>
 
             <h2 className="text-2xl font-semibold text-gray-800">Solicitar Creación de Cuenta</h2>
-            {/* Tabs */}
+
             <nav className="flex space-x-2 mb-4">
-              {(['director', 'minerd'] as const).map(type => (
+              {(['director', 'minerd'] as const).map(t => (
                 <button
-                  key={type}
+                  key={t}
                   type="button"
-                  onClick={() => switchModal(type)}
-                  className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
-                    modalType === type
+                  onClick={() => setModalType(t)}
+                  className={`px-4 py-2 rounded-lg ${
+                    modalType === t
                       ? 'bg-[#29638A] text-white shadow-md'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
-                  {type === 'director' ? 'Director' : 'MINERD'}
+                  {t === 'director' ? 'Director' : 'MINERD'}
                 </button>
               ))}
             </nav>
-            {/* MINERD */}
+
             {modalType === 'minerd' ? (
               <section className="space-y-4">
-                <h3 className="flex items-center text-lg font-medium text-[#29638A]">
-                  <BuildingOffice2Icon className="h-5 w-5 mr-2" />
-                  Datos Administrador MINERD
-                </h3>
                 <FormInput
                   id="minerd-name"
-                  label="Nombre Completo"
+                  label="Nombres"
                   type="text"
-                  value={minerdName}
-                  onChange={e => setMinerdName(e.target.value)}
-                  placeholder="Nombre completo"
+                  value={minerdFirstName}
+                  onChange={e => setMinerdFirstName(e.target.value)}
+                  placeholder="Nombres"
                   icon={<UserIcon className="w-6 h-6 text-gray-400" />}
                 />
                 <FormInput
-                  id="minerd-email"
+                  id="minerd-last"
+                  label="Apellidos"
+                  type="text"
+                  value={minerdLastName}
+                  onChange={e => setMinerdLastName(e.target.value)}
+                  placeholder="Apellidos"
+                  icon={<UserIcon className="w-6 h-6 text-gray-400" />}
+                />
+                <FormInput
+                  id="minerd-mail"
                   label="Correo Electrónico"
                   type="email"
                   value={minerdEmail}
@@ -300,104 +415,135 @@ const Login: React.FC = () => {
                   icon={<EnvelopeIcon className="w-6 h-6 text-gray-400" />}
                 />
                 <div className="flex justify-end">
-                  <button className="bg-[#29638A] hover:bg-[#205468] text-white rounded-lg px-6 py-2 shadow-md transition-colors">
-                    Enviar Solicitud
+                  <button
+                    type="button"
+                    disabled={submitting}
+                    className="bg-[#29638A] hover:bg-[#205468] text-white rounded-lg px-6 py-2 shadow-md transition-colors disabled:opacity-60"
+                    onClick={handleAccountRequest}
+                  >
+                    {submitting ? 'Enviando…' : 'Enviar Solicitud'}
                   </button>
                 </div>
               </section>
             ) : (
               <>
-                {/* Director: Personal */}
-                <section className="space-y-3 p-4 bg-white rounded-xl border border-gray-100 shadow-sm">
-                  <h3 className="flex items-center text-lg font-medium text-[#29638A]">
-                    <UserIcon className="h-5 w-5 mr-2" />
-                    Datos del Director
-                  </h3>
-                  <FormInput
-                    id="director-name"
-                    label="Nombre Completo"
-                    type="text"
-                    value=""
-                    onChange={() => {}}
-                    placeholder="Nombre completo"
-                    icon={<UserIcon className="w-6 h-6 text-gray-400" />}
-                  />
-                  <FormInput
-                    id="director-email"
-                    label="Correo Institucional"
-                    type="email"
-                    value=""
-                    onChange={() => {}}
-                    placeholder="correo@institucion.edu"
-                    icon={<EnvelopeIcon className="w-6 h-6 text-gray-400" />}
-                  />
-                  <FormInput
-                    id="director-phone"
-                    label="Teléfono"
-                    type="tel"
-                    value=""
-                    onChange={() => {}}
-                    placeholder="Número telefónico"
-                    icon={<PhoneIcon className="w-6 h-6 text-gray-400" />}
-                  />
-                </section>
+                <FormInput
+                  id="dir-name"
+                  label="Nombres"
+                  type="text"
+                  value={directorFirstName}
+                  onChange={e => setDirectorFirstName(e.target.value)}
+                  placeholder="Nombres"
+                  icon={<UserIcon className="w-6 h-6 text-gray-400" />}
+                />
+                <FormInput
+                  id="dir-last"
+                  label="Apellidos"
+                  type="text"
+                  value={directorLastName}
+                  onChange={e => setDirectorLastName(e.target.value)}
+                  placeholder="Apellidos"
+                  icon={<UserIcon className="w-6 h-6 text-gray-400" />}
+                />
+                <FormInput
+                  id="dir-mail"
+                  label="Correo Institucional"
+                  type="email"
+                  value={directorEmail}
+                  onChange={e => setDirectorEmail(e.target.value)}
+                  placeholder="correo@institucion.edu"
+                  icon={<EnvelopeIcon className="w-6 h-6 text-gray-400" />}
+                />
+                <FormInput
+                  id="school"
+                  label="Nombre del Centro Educativo"
+                  type="text"
+                  value={schoolName}
+                  onChange={e => setSchoolName(e.target.value)}
+                  placeholder="Nombre del centro educativo"
+                  icon={<BuildingLibraryIcon className="w-6 h-6 text-gray-400" />}
+                />
 
-                {/* Director: Institución */}
-                <section className="space-y-3 p-4 bg-white rounded-xl border border-gray-100 shadow-sm">
-                  <h3 className="flex items-center text-lg font-medium text-[#29638A]">
-                    <BuildingLibraryIcon className="h-5 w-5 mr-2" />
-                    Centro Educativo
-                  </h3>
-                  <FormInput
-                    id="school-name"
-                    label="Nombre Institución"
-                    type="text"
-                    value={schoolName}
-                    onChange={e => setSchoolName(e.target.value)}
-                    placeholder="Nombre de la institución"
-                    icon={<BuildingLibraryIcon className="w-6 h-6 text-gray-400" />}
-                  />
-                  <div>
-                    <label htmlFor="school-type" className="block text-gray-800 text-lg mb-1">
-                      Tipo de Institución
-                    </label>
-                    <select
-                      id="school-type"
-                      value={schoolType}
-                      onChange={e => setSchoolType(e.target.value)}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-300 transition-all duration-200"
-                    >
-                      <option value="">Seleccione</option>
-                      <option value="Pública">Pública</option>
-                      <option value="Privada">Privada</option>
-                    </select>
+                <FormInput
+                  id="street"
+                  label="Calle"
+                  type="text"
+                  value={direccionCalle}
+                  onChange={e => setDireccionCalle(e.target.value)}
+                  placeholder="Dirección"
+                  icon={<BuildingOffice2Icon className="w-6 h-6 text-gray-400" />}
+                />
+                <FormInput
+                  required={false}
+                  id="apt"
+                  label="Información Vivienda"
+                  type="text"
+                  value={direccionVivienda}
+                  onChange={e => setDireccionVivienda(e.target.value)}
+                  placeholder="Apto, casa, etc (opcional)"
+                  icon={<BuildingOffice2Icon className="w-6 h-6 text-gray-400" />}
+                />
+
+                <div>
+                  <label className="block mb-1 text-gray-800">Sector</label>
+                  <select
+                    value={sectorId ?? ''}
+                    onChange={e => setSectorId(Number(e.target.value))}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-300"
+                  >
+                    <option value="" disabled>
+                      Seleccione sector
+                    </option>
+                    {sectores.map(s => (
+                      <option key={s.id} value={s.id}>
+                        {s.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="mt-4">
+                  <label className="block mb-1 text-gray-800">Tipo de Centro</label>
+                  <div className="flex flex-wrap gap-4">
+                    {TIPOS_DE_CENTROS.map(tc => (
+                      <label key={tc.id} className="inline-flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={tiposCentro.includes(tc.id)}
+                          onChange={() => toggleTipoCentro(tc.id)}
+                        />
+                        {tc.label}
+                      </label>
+                    ))}
                   </div>
-                </section>
+                </div>
 
-                {/* Director: Académico */}
-                <section className="space-y-3 p-4 bg-white rounded-xl border border-gray-100 shadow-sm">
-                  <h3 className="flex items-center text-lg font-medium text-[#29638A]">
-                    <BookOpenIcon className="h-5 w-5 mr-2" />
+                <section className="mt-6 space-y-3">
+                  <h3 className="flex items-center text-lg font-medium text-gray-800">
+                    <BookOpenIcon className="w-5 h-5 mr-2 text-gray-600" />
                     Estructura Académica
                   </h3>
-                  <div className="flex gap-2 mb-2">
+
+                  <div className="flex gap-2">
                     <select
                       value={newGradeName}
                       onChange={e => setNewGradeName(e.target.value)}
-                      className="flex-1 border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all"
+                      className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-300"
                     >
-                      <option value="">Seleccione grado...</option>
+                      <option value="" disabled>
+                        Seleccione grado…
+                      </option>
                       <optgroup label="Primaria">
                         {['1ro', '2do', '3ro', '4to', '5to', '6to'].map(n => (
                           <option key={n} value={`${n} de Primaria`}>
-                            {n} de Primaria
+                            {`${n} de Primaria`}
                           </option>
                         ))}
                       </optgroup>
                       <optgroup label="Secundaria">
                         {['1ro', '2do', '3ro', '4to', '5to', '6to'].map(n => (
                           <option key={n} value={`${n} de Secundaria`}>
-                            {n} de Secundaria
+                            {`${n} de Secundaria`}
                           </option>
                         ))}
                       </optgroup>
@@ -412,20 +558,40 @@ const Login: React.FC = () => {
                     </button>
                   </div>
 
-                  {grades.map(grade => (
+                  {grades.map(g => (
                     <div
-                      key={grade.id}
+                      key={g.id}
                       className="border border-gray-200 rounded-lg p-4 mb-3 hover:shadow-md transition-all duration-200"
                     >
                       <div className="flex justify-between items-center mb-2">
-                        <span className="font-medium">{grade.name}</span>
+                        <div className="flex items-center gap-4">
+                          <span className="font-medium">{g.name}</span>
+                          <select
+                            value={g.seccion}
+                            onChange={e =>
+                              setGrades(gr =>
+                                gr.map(x => (x.id === g.id ? { ...x, seccion: e.target.value } : x))
+                              )
+                            }
+                            className="border border-gray-300 rounded px-2 py-1"
+                          >
+                            <option value="" disabled>
+                              Cant. de secciones…
+                            </option>
+                            {['A', 'B', 'C', 'D', 'E'].map(s => (
+                              <option key={s} value={s}>
+                                {s}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
                         <div className="flex items-center gap-2">
                           <button
                             type="button"
-                            onClick={() => toggleCollapse(grade.id)}
+                            onClick={() => toggleCollapse(g.id)}
                             className="p-1 text-gray-500 hover:text-gray-700 focus:outline-none transition-colors"
                           >
-                            {grade.collapsed ? (
+                            {g.collapsed ? (
                               <ChevronDownIcon className="h-4 w-4" />
                             ) : (
                               <ChevronUpIcon className="h-4 w-4" />
@@ -433,7 +599,7 @@ const Login: React.FC = () => {
                           </button>
                           <button
                             type="button"
-                            onClick={() => removeGrade(grade.id)}
+                            onClick={() => removeGrade(g.id)}
                             className="p-1 rounded-full text-gray-400 hover:bg-red-100 hover:text-red-500 focus:outline-none transition-colors"
                           >
                             <XMarkIcon className="h-4 w-4" />
@@ -441,17 +607,26 @@ const Login: React.FC = () => {
                         </div>
                       </div>
 
-                      {!grade.collapsed && (
+                      <p className="text-sm text-gray-500 mb-3">
+                        {g.seccion === ''
+                          ? `Seleccione cantidad de secciones para ${g.name}.`
+                          : g.seccion === 'A'
+                            ? `${g.name} tiene solo la sección A.`
+                            : `${g.name} tiene secciones desde A hasta ${g.seccion}.`}
+                      </p>
+
+                      {!g.collapsed && (
                         <>
-                          {grade.classes.length === 0 && (
+                          {g.classes.length === 0 && (
                             <div className="bg-gray-50 rounded-lg p-3 mb-2">
                               <p className="text-sm text-gray-600">
-                                No hay asignaturas en este grado. Agregue una asignatura.
+                                No hay asignaturas en este grado. Agregue una.
                               </p>
                             </div>
                           )}
+
                           <div className="space-y-2 mb-3">
-                            {grade.classes.map((cls, idx) => (
+                            {g.classes.map((cls, idx) => (
                               <div
                                 key={idx}
                                 className="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2 hover:bg-gray-100 transition-colors"
@@ -462,7 +637,7 @@ const Login: React.FC = () => {
                                 </div>
                                 <button
                                   type="button"
-                                  onClick={() => removeClass(grade.id, idx)}
+                                  onClick={() => removeClass(g.id, idx)}
                                   className="p-1 rounded-full text-gray-400 hover:bg-red-100 hover:text-red-500 focus:outline-none transition-colors"
                                 >
                                   <XMarkIcon className="h-4 w-4" />
@@ -470,16 +645,17 @@ const Login: React.FC = () => {
                               </div>
                             ))}
                           </div>
+
                           <div className="flex gap-2">
                             <input
-                              value={grade.newClassName}
-                              onChange={e => updateNewClass(grade.id, e.target.value)}
+                              value={g.newClassName}
+                              onChange={e => updateNewClass(g.id, e.target.value)}
                               placeholder="Ej: Matemáticas"
-                              className="flex-1 border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all"
+                              className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-300"
                             />
                             <button
                               type="button"
-                              onClick={() => addClass(grade.id)}
+                              onClick={() => addClass(g.id)}
                               className="inline-flex items-center gap-1 bg-[#29638A] hover:bg-[#205468] text-white rounded-lg px-4 py-2 shadow-md transition-colors"
                             >
                               <PlusIcon className="h-5 w-5" />
@@ -492,8 +668,13 @@ const Login: React.FC = () => {
                 </section>
 
                 <div className="flex justify-end">
-                  <button className="bg-[#29638A] hover:bg-[#205468] text-white rounded-lg px-6 py-2 shadow-md transition-colors">
-                    Enviar Solicitud
+                  <button
+                    type="button"
+                    disabled={submitting}
+                    onClick={handleAccountRequest}
+                    className="bg-[#29638A] hover:bg-[#205468] text-white rounded-lg px-6 py-2 shadow-md transition-colors disabled:opacity-60"
+                  >
+                    {submitting ? 'Enviando…' : 'Enviar Solicitud'}
                   </button>
                 </div>
               </>

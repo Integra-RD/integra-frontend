@@ -37,7 +37,7 @@ export default function AppRouter() {
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
         <Route path="/recovery" element={<Recovery />} />
-        <Route path="/new-password" element={<NewPassword />} />
+        <Route path="/complete-password-reset/:uid/:token" element={<NewPassword />} />
 
         {/*** Unauth ***/}
         <Route path="/unauthorized" element={<Unauthorized />} />
