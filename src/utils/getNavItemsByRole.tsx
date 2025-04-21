@@ -47,8 +47,8 @@ export const getNavItemsByRole = (
         {
           label: 'Reportes',
           icon: <DocumentMagnifyingGlassIcon className="w-5 h-5" />,
-          active: location.pathname === '/director/reportes',
-          onClick: () => navigate('/director/reportes')
+          active: location.pathname === '/director/reports',
+          onClick: () => navigate('/director/reports')
         },
         {
           label: 'Comunicaciones',

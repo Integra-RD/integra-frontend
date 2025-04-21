@@ -28,6 +28,8 @@ import GradeHistory from '../pages/student/GradeHistory'
 import GradeAverage from '../pages/student/GradeAverage'
 import AcademicRanking from '../pages/student/AcademicRanking'
 import NotificationsPage from '../pages/student/NotificationsPage'
+import { DocumentMagnifyingGlassIcon } from '@heroicons/react/24/outline'
+import DirectorReport from '../pages/director/Reports'
 
 export default function AppRouter() {
   return (
@@ -108,6 +110,15 @@ export default function AppRouter() {
           element={
             <RoleGuard allowedRoles={['director']}>
               <DirectorMessagingPage />
+            </RoleGuard>
+          }
+        />
+
+        <Route
+          path="/director/reports"
+          element={
+            <RoleGuard allowedRoles={['director']}>
+              <DirectorReport/>
             </RoleGuard>
           }
         />
