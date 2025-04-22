@@ -2,7 +2,8 @@ import React, { useState, useRef, useCallback } from 'react'
 import {
   ArrowUpTrayIcon,
   ExclamationCircleIcon,
-  CheckCircleIcon
+  CheckCircleIcon,
+  ArrowDownTrayIcon
 } from '@heroicons/react/24/outline'
 
 // TODO: Connect logic to uploading and show accurate feedback
@@ -36,6 +37,16 @@ interface FileUploaderProps {
    * Texto descriptivo que se muestra debajo del ícono
    */
   description?: string
+
+  /**
+   * Ruta del archivo template para descargar
+   */
+  templatePath?: string
+
+  /**
+   * Texto del botón de descarga de template
+   */
+  downloadButtonText?: string
 }
 
 const FileUploader: React.FC<FileUploaderProps> = ({
@@ -48,7 +59,9 @@ const FileUploader: React.FC<FileUploaderProps> = ({
     'Las calificaciones deben estar en escala de 0-100.'
   ],
   title = 'Importación Masiva de Calificaciones',
-  description = 'Sube un archivo Excel (.xlsx) con las calificaciones de los estudiantes'
+  description = 'Sube un archivo Excel (.xlsx) con las calificaciones de los estudiantes',
+  templatePath = '/grade-import-template.xlsx',
+  downloadButtonText = 'Descargar Plantilla'
 }) => {
   const [isDragging, setIsDragging] = useState(false)
   const [file, setFile] = useState<File | null>(null)
@@ -123,6 +136,12 @@ const FileUploader: React.FC<FileUploaderProps> = ({
     fileInputRef.current?.click()
   }
 
+  // Descargar el archivo template
+  const handleDownloadTemplate = (e: React.MouseEvent) => {
+    e.stopPropagation() // Evitar que se abra el diálogo de selección de archivo
+    window.open(templatePath, '_blank')
+  }
+
   return (
     <div className="w-full bg-[#F1F4F9] p-6 rounded-lg">
       <h2 className="text-xl font-semibold text-[#181C20] mb-4">{title}</h2>
@@ -163,12 +182,23 @@ const FileUploader: React.FC<FileUploaderProps> = ({
           </>
         )}
 
-        <button
-          type="button"
-          className="px-5 py-2.5 bg-[#29638A] text-white rounded-full text-sm font-medium hover:bg-[#2c6e91] transition-colors mt-4 shadow-sm"
-        >
-          {buttonText}
-        </button>
+        <div className="flex space-x-3 mt-4">
+          <button
+            type="button"
+            className="px-5 py-2.5 bg-[#29638A] text-white rounded-full text-sm font-medium hover:bg-[#2c6e91] transition-colors shadow-sm"
+          >
+            {buttonText}
+          </button>
+          
+          <button
+            type="button"
+            className="px-5 py-2.5 bg-white text-[#29638A] border border-[#29638A] rounded-full text-sm font-medium hover:bg-gray-50 transition-colors shadow-sm flex items-center"
+            onClick={handleDownloadTemplate}
+          >
+            <ArrowDownTrayIcon className="w-4 h-4 mr-1" />
+            {downloadButtonText}
+          </button>
+        </div>
 
         {error && (
           <div className="mt-3 flex items-center text-red-500">
