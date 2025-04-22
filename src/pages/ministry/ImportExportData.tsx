@@ -43,7 +43,6 @@ const ImportExportData: React.FC = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const navItems = getNavItemsByRole('ministry', location, navigate)
-  const user = { name: 'Juan Pérez', id: '0034' }
 
   const [activeTab, setActiveTab] = useState<'recibidos' | 'registrados'>('recibidos')
   const [currentPage, setCurrentPage] = useState(1)
@@ -134,7 +133,6 @@ const ImportExportData: React.FC = () => {
       <LayoutWrapper
         title="I/O de Datos"
         subtitle="Gestiona las solicitudes de instituciones educativas: aprueba, rechaza o consulta los centros ya registrados."
-        user={user}
         navItems={navItems}
         headerRightSection={
           <div className="flex gap-3">

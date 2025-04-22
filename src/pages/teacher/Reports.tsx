@@ -133,7 +133,6 @@ const Reports: React.FC = () => {
 
   return (
     <LayoutWrapper
-      user={{ name: 'Profa. Laura Castillo', id: 'D-0741' }}
       navItems={navItems}
       title="Reportes"
       subtitle="Consulta todas las calificaciones de tus estudiantes. Accede al historial académico por estudiantes, revisa las notas globales por asignatura y periodo."

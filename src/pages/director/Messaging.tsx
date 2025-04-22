@@ -17,13 +17,12 @@ const mockMessages: Message[] = [
 ]
 
 const DirectorMessagingPage = () => {
-  const user = { name: 'Laura García', id: 'D123' }
   const location = useLocation()
   const navigate = useNavigate()
   const navItems = getNavItemsByRole('director', location, navigate)
 
   return (
-    <LayoutWrapper title="Comunicaciones Internas" user={user} navItems={navItems}>
+    <LayoutWrapper title="Comunicaciones Internas" navItems={navItems}>
       <MessagingLayout senderRole="Director" initialMessages={mockMessages} />
     </LayoutWrapper>
   )

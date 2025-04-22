@@ -83,7 +83,7 @@ const Topbar: React.FC<TopbarProps> = ({ navItems, user }) => {
               </div>
               <div className="text-sm leading-tight">
                 <div className="text-gray-900 font-medium">{user.name}</div>
-                <div className="text-gray-500 text-xs">ID {user.id}</div>
+                <div className="text-gray-500 text-xs">ID: {user.id}</div>
               </div>
             </div>
 

@@ -19,12 +19,9 @@ const MinistryHome: React.FC = () => {
   const navigate = useNavigate()
   const navItems = getNavItemsByRole('ministry', location, navigate)
 
-  const user = { name: 'Juan Pérez', id: '0034' }
-
   return (
     <LayoutWrapper
       navItems={navItems}
-      user={user}
       title="Bienvenido al Portal del Ministerio de Educación"
       subtitle="Explora centros educativos y compara su desempeño académico por provincia."
     >

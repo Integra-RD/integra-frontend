@@ -37,10 +37,8 @@ const NotificationsPage: React.FC = () => {
   const navigate = useNavigate()
   const navItems = getNavItemsByRole('student', location, navigate)
 
-  const user = { name: 'Juan Pérez', id: '0034' }
-
   return (
-    <LayoutWrapper navItems={navItems} user={user} title="Notificaciones">
+    <LayoutWrapper navItems={navItems} title="Notificaciones">
       <div className="space-y-4">
         {mockNotifications.map(notification => (
           <NotificationCard key={notification.id} notification={notification} />

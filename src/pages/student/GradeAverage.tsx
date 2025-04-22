@@ -9,8 +9,6 @@ const GradeAverage: React.FC = () => {
   const navigate = useNavigate()
   const navItems = getNavItemsByRole('student', location, navigate)
 
-  const user = { name: 'Juan Pérez', id: '0034' }
-
   const averageData = {
     labels: [
       '1ro Secundaria',
@@ -71,7 +69,6 @@ const GradeAverage: React.FC = () => {
   return (
     <LayoutWrapper
       navItems={navItems}
-      user={user}
       title="Promedios"
       subtitle="En esta sección podrás consultar tu promedio académico general, así como el correspondiente al periodo actual. Utiliza esta información para llevar un seguimiento continuo de tu desempeño y realizar mejoras en tu proceso de aprendizaje."
     >

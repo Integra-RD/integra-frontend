@@ -63,8 +63,6 @@ const AcademicRanking: React.FC = () => {
 
   const semesterOptions = ['Todos los semestres', '1er Semestre', '2do Semestre']
 
-  const user = { name: 'Juan Pérez', id: '0034' }
-
   const filteredData = useMemo(() => {
     return academicRanking.filter(student => {
       const matchGrade = selectedGrade === 'Todos los grados' || student.grade === selectedGrade
@@ -125,7 +123,6 @@ const AcademicRanking: React.FC = () => {
   return (
     <LayoutWrapper
       navItems={navItems}
-      user={user}
       title="Ranking Académico"
       subtitle="Consulta los estudiantes con los mejores promedios según grado y semestre."
     >

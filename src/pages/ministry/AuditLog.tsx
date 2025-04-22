@@ -108,8 +108,6 @@ const AuditLog: React.FC = () => {
   const navigate = useNavigate()
   const navItems = getNavItemsByRole('ministry', location, navigate)
 
-  const user = { name: 'Juan Pérez', id: '0034' }
-
   const [roleFilter, setRoleFilter] = useState('Todos')
   const [typeFilter, setTypeFilter] = useState('Todos')
 
@@ -123,7 +121,6 @@ const AuditLog: React.FC = () => {
     <LayoutWrapper
       title="Auditorías"
       subtitle="Visualiza toda la actividad realizada por los usuarios dentro del sistema."
-      user={user}
       navItems={navItems}
       headerRightSection={
         <div className="flex gap-4 items-center text-sm">

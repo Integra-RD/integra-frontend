@@ -30,7 +30,6 @@ const mockSchools = Array.from({ length: 12 }, (_, i) => {
 })
 
 const DirectorHome: React.FC = () => {
-  const user = { name: 'Juan Pérez', id: '0034' }
   const location = useLocation()
   const navigate = useNavigate()
   const [activeView, setActiveView] = useState<'students' | 'teachers'>('students')
@@ -67,7 +66,7 @@ const DirectorHome: React.FC = () => {
   ]
 
   return (
-    <LayoutWrapper navItems={navItems} user={user} title="Bienvenido al Portal del Director">
+    <LayoutWrapper navItems={navItems} title="Bienvenido al Portal del Director">
       <DataTable
         headers={activeView === 'students' ? studentHeaders : teacherHeaders}
         data={filteredData}

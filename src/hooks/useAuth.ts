@@ -20,28 +20,47 @@ const roleMap: Record<BackendRole, FrontendRole> = {
 }
 
 export const useAuth = () => {
-  const { setTokens, setRole, logout } = useAuthStore()
+  const { setTokens, setRole, logout, setUserId, setUserProfile } = useAuthStore()
 
   const login = async (usernameOrEmail: string, password: string): Promise<FrontendRole> => {
     const payload: Record<string, string> = { password }
-    if (usernameOrEmail.includes('@')) payload.email = usernameOrEmail
-    else payload.username = usernameOrEmail
+
+    if (usernameOrEmail.includes('@')) {
+      payload.email = usernameOrEmail
+    } else {
+      payload.username = usernameOrEmail
+    }
 
     const res = await api.post('/auth/login/', payload)
-    const { access, refresh, roles } = res.data
+    const { access, refresh, roles, user_id } = res.data
 
     const raw = roles?.[0]?.nombre_rol?.toLowerCase().trim() as BackendRole | undefined
     const frontendRole = raw ? roleMap[raw] : undefined
 
+    // Store tokens + user ID
     setTokens(access, refresh)
+    setUserId(user_id.toString())
 
-    if (frontendRole) {
-      setRole(frontendRole)
-    } else {
+    if (!frontendRole) {
       setRole(null)
       logout()
       throw new Error(`Unrecognized role: ${roles?.[0]?.nombre_rol}`)
     }
+
+    setRole(frontendRole)
+
+    const profileRes = await api.get(`/auth/users/detail/${user_id}/`)
+    const profile = profileRes.data
+
+    const fullName =
+      `${profile.first_name} ${profile.last_name}`.trim() ||
+      profile.username ||
+      `Usuario #${profile.id}`
+
+    setUserProfile({
+      id: profile.id.toString(),
+      name: fullName
+    })
 
     return frontendRole
   }

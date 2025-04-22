@@ -26,14 +26,13 @@ const mockMessages: Message[] = [
 ]
 
 const TeacherMessagingPage = () => {
-  const user = { name: 'Profa. Laura Castillo', id: 'D-0741' }
   const location = useLocation()
   const navigate = useNavigate()
 
   const navItems = getNavItemsByRole('teacher', location, navigate)
 
   return (
-    <LayoutWrapper title="Comunicaciones Internas" user={user} navItems={navItems}>
+    <LayoutWrapper title="Comunicaciones Internas" navItems={navItems}>
       <MessagingLayout senderRole="Docente" initialMessages={mockMessages} />
     </LayoutWrapper>
   )

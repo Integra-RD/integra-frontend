@@ -302,7 +302,6 @@ const lineData = {
 }
 
 const Scholarships: React.FC = () => {
-  const user = { name: 'Juan Pérez', id: '0034' }
   const location = useLocation()
   const navigate = useNavigate()
   const navItems = getNavItemsByRole('ministry', location, navigate)
@@ -316,7 +315,6 @@ const Scholarships: React.FC = () => {
     <LayoutWrapper
       title="Becas y Programas"
       subtitle="Visualiza, administra y evalúa los programas de becas disponibles en todo el sistema educativo nacional e internacional."
-      user={user}
       navItems={navItems}
     >
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">

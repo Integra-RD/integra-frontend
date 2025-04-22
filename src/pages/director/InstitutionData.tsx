@@ -130,7 +130,6 @@ const evolutionData = {
 }
 
 const InstitutionData: React.FC = () => {
-  const user = { name: 'Juan Pérez', id: '0034' }
   const location = useLocation()
   const navigate = useNavigate()
   const [currentPage] = useState(1)
@@ -144,7 +143,6 @@ const InstitutionData: React.FC = () => {
     <LayoutWrapper
       title="Mi Centro Educativo"
       subtitle="Maneja la identidad y operación de tu centro educativo: actualiza nombre, ubicación, director y datos de contacto de forma rápida y segura"
-      user={user}
       navItems={navItems}
     >
       {/* Card Principal: colegio */}

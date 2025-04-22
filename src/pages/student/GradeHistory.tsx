@@ -24,12 +24,9 @@ const GradeHistory: React.FC = () => {
   const navigate = useNavigate()
   const navItems = getNavItemsByRole('student', location, navigate)
 
-  const user = { name: 'Juan Pérez', id: '0034' }
-
   return (
     <LayoutWrapper
       navItems={navItems}
-      user={user}
       title="Historial"
       subtitle="Consulta todas tus calificaciones en un solo lugar. Accede a tu historial académico, revisa tus notas por materia y periodo."
     >
