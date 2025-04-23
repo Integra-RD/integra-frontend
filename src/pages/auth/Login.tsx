@@ -75,7 +75,6 @@ type Grade = {
   collapsed: boolean
 }
 
-// TODO: Arreglar Tecnico, it 400s for some reason i think the BD hasnt been updated
 const TIPOS_DE_CENTROS = [
   { id: 1, label: 'Básico' },
   { id: 2, label: 'Medio' },
