@@ -3,7 +3,6 @@ import {
   UsersIcon,
   BuildingLibraryIcon,
   DocumentMagnifyingGlassIcon,
-  MegaphoneIcon,
   HomeIcon,
   AcademicCapIcon,
   CircleStackIcon,
@@ -48,12 +47,6 @@ export const getNavItemsByRole = (
           icon: <DocumentMagnifyingGlassIcon className="w-5 h-5" />,
           active: location.pathname === '/director/reports',
           onClick: () => navigate('/director/reports')
-        },
-        {
-          label: 'Comunicaciones',
-          icon: <MegaphoneIcon className="w-5 h-5" />,
-          active: location.pathname === '/director/messaging',
-          onClick: () => navigate('/director/messaging')
         }
       ]
 
@@ -82,12 +75,6 @@ export const getNavItemsByRole = (
           icon: <DocumentMagnifyingGlassIcon className="w-5 h-5" />,
           active: location.pathname === '/ministry/audits',
           onClick: () => navigate('/ministry/audits')
-        },
-        {
-          label: 'Comunicaciones',
-          icon: <MegaphoneIcon className="w-5 h-5" />,
-          active: location.pathname === '/ministry/messaging',
-          onClick: () => navigate('/ministry/messaging')
         }
       ]
 
@@ -120,12 +107,6 @@ export const getNavItemsByRole = (
           icon: <DocumentMagnifyingGlassIcon className="w-5 h-5" />,
           active: location.pathname === '/teacher/reports',
           onClick: () => navigate('/teacher/reports')
-        },
-        {
-          label: 'Comunicaciones',
-          icon: <MegaphoneIcon className="w-5 h-5" />,
-          active: location.pathname === '/teacher/messaging',
-          onClick: () => navigate('/teacher/messaging')
         }
       ]
 

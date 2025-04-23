@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { BellIcon, ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline'
+import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline'
 import integraLogo from '../assets/integraLogo.svg'
 import { useAuthStore } from '../store/authStore'
 
@@ -70,15 +70,6 @@ const Topbar: React.FC<TopbarProps> = ({ navItems, user }) => {
           {/* // TODO: Bell notif should redirect to correct page based on role  */}
           {/* User area */}
           <div className="flex items-center space-x-3 bg-[#f5faff]/90 backdrop-blur-md px-4 py-2 rounded-full shadow-sm">
-            {/* notifications */}
-            <button
-              onClick={() => navigate('/student/notifications')}
-              aria-label="Notificaciones"
-              className="hover:text-blue-600 transition"
-            >
-              <BellIcon className="w-5 h-5 text-gray-700" />
-            </button>
-
             {/* avatar + name */}
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 rounded-full bg-[#2c6e91] text-white flex items-center justify-center text-sm font-semibold">
