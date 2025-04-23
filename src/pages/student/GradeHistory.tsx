@@ -1,28 +1,69 @@
-import React from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import LayoutWrapper from '../../components/LayoutWrapper'
-import DataTable from '../../components/DataTable'
-import { getNavItemsByRole } from '../../utils/getNavItemsByRole'
+"use client"
 
-const baseGrades = [
-  { subject: 'Cálculo', grade: 82, teacher: 'Vicente Fernández', average: 87.2 },
-  { subject: 'Literatura Avanzada', grade: 87, teacher: 'Alejandro Fernández', average: 84.7 },
-  { subject: 'Física Cuántica', grade: 97, teacher: 'Joan Sebastian', average: 98.1 },
-  { subject: 'Programación', grade: 95, teacher: 'Christian Nodal', average: 93.8 },
-  { subject: 'Estadística', grade: 91, teacher: 'Antonio Aguilar', average: 87.7 },
-  { subject: 'Formación Humana y Religiosa', grade: 98, teacher: 'Cristian Castro', average: 96.3 },
-  { subject: 'Educación Cívica y Ciudadana', grade: 72, teacher: 'Carlos Rivera', average: 87.2 }
-]
-
-const mockGrades = Array.from({ length: 100 }, (_, i) => {
-  const base = baseGrades[i % baseGrades.length]
-  return { ...base, subject: `${base.subject} ${i + 1}` }
-})
+import type React from "react"
+import { useMemo } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
+import LayoutWrapper from "../../components/LayoutWrapper"
+import DataTable from "../../components/DataTable"
+import { getNavItemsByRole } from "../../utils/getNavItemsByRole"
+import { useStudentContext, periods, subjects } from "../../context/StudentContext"
 
 const GradeHistory: React.FC = () => {
   const location = useLocation()
   const navigate = useNavigate()
-  const navItems = getNavItemsByRole('student', location, navigate)
+  const navItems = getNavItemsByRole("student", location, navigate)
+  const { students } = useStudentContext()
+
+  // Assuming we're showing the logged-in student's grades
+  // In a real app, you'd get the current user ID from auth context
+  // For now, we'll just use the first student in the list
+  const currentStudent = students[0]
+
+  // Process the student's grades for all periods
+  // The DataTable component will handle filtering by period internally
+  const gradesData = useMemo(() => {
+    if (!currentStudent) return []
+
+    // Create an array to hold all subject/period combinations
+    const allGradesData = []
+
+    // For each subject and period combination
+    for (const subject of subjects) {
+      for (const period of periods) {
+        const grade = currentStudent.grades[subject]?.[period] || 0
+
+        // Calculate average for this subject across all students
+        const subjectGrades = students
+          .map((s) => s.grades[subject]?.[period])
+          .filter((g) => g !== undefined && g !== null) as number[]
+
+        const average =
+          subjectGrades.length > 0 ? subjectGrades.reduce((sum, g) => sum + g, 0) / subjectGrades.length : 0
+
+        // Mock teacher names (in a real app, you'd have this data)
+        const teacherNames = [
+          "Vicente Fernández",
+          "Alejandro Fernández",
+          "Joan Sebastian",
+          "Christian Nodal",
+          "Antonio Aguilar",
+          "Cristian Castro",
+          "Carlos Rivera",
+        ]
+        const teacherIndex = subjects.indexOf(subject) % teacherNames.length
+
+        allGradesData.push({
+          subject,
+          grade,
+          teacher: teacherNames[teacherIndex],
+          average: average.toFixed(1),
+          period, // Include period for filtering
+        })
+      }
+    }
+
+    return allGradesData
+  }, [currentStudent, students])
 
   return (
     <LayoutWrapper
@@ -32,14 +73,14 @@ const GradeHistory: React.FC = () => {
     >
       <DataTable
         headers={[
-          { label: 'Asignatura', key: 'subject' },
-          { label: 'Calificación', key: 'grade' },
-          { label: 'Docente', key: 'teacher' },
-          { label: 'Promedio de Calificación', key: 'average' }
+          { label: "Asignatura", key: "subject" },
+          { label: "Calificación", key: "grade" },
+          { label: "Docente", key: "teacher" },
+          { label: "Promedio de Calificación", key: "average" },
         ]}
-        data={mockGrades}
+        data={gradesData}
         dropdownLabel="Periodo"
-        dropdownOptions={['2021-2022', '2022-2023', '2023-2024']}
+        dropdownOptions={periods}
         extraFilters={true}
       />
     </LayoutWrapper>
@@ -47,3 +88,4 @@ const GradeHistory: React.FC = () => {
 }
 
 export default GradeHistory
+

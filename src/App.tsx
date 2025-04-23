@@ -1,5 +1,10 @@
 import AppRouter from './router/routes'
+import { StudentProvider } from '././context/StudentContext'
 
 export default function App() {
-  return <AppRouter />
+  return (
+    <StudentProvider>
+      <AppRouter />
+    </StudentProvider>
+  )
 }
