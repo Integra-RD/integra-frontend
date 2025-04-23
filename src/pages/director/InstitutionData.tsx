@@ -13,7 +13,7 @@ import ChartWrapper from '../../components/ChartWrapper'
 import inteclogo from '../../assets/inteclogo.png'
 import pucmmlogo from '../../assets/pucmmlogo.png'
 import unibelogo from '../../assets/unibelogo.png'
-import unphulogo from '../../assets/unphuLogo.png'
+import unphulogo from '../../assets/unphulogo.png'
 import { getNavItemsByRole } from '../../utils/getNavItemsByRole'
 
 const submissions = [
