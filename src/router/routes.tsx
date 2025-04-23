@@ -117,7 +117,7 @@ export default function AppRouter() {
           path="/director/reports"
           element={
             <RoleGuard allowedRoles={['director']}>
-              <DirectorReport/>
+              <DirectorReport />
             </RoleGuard>
           }
         />

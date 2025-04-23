@@ -31,9 +31,9 @@ const mockSchools = Array.from({ length: 12 }, (_, i) => {
 
 // Toast personalizado persistente
 const PersistentToast: React.FC<{
-  visible: boolean;
-  onGoToTeachers: () => void;
-  onGoToStudents: () => void;
+  visible: boolean
+  onGoToTeachers: () => void
+  onGoToStudents: () => void
 }> = ({ visible, onGoToTeachers, onGoToStudents }) => {
   if (!visible) return null
 
@@ -41,12 +41,25 @@ const PersistentToast: React.FC<{
     <div className="fixed top-20 right-4 z-[9999] w-96 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 shadow-lg rounded">
       <div className="flex">
         <div className="py-1">
-          <svg className="w-6 h-6 mr-4 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          <svg
+            className="w-6 h-6 mr-4 text-yellow-500"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
           </svg>
         </div>
         <div>
-          <p className="font-bold">Faltan datos esenciales: sube docentes y/o estudiantes para continuar.</p>
+          <p className="font-bold">
+            Faltan datos esenciales: sube docentes y/o estudiantes para continuar.
+          </p>
           <div className="flex space-x-2 mt-3">
             <button
               onClick={onGoToTeachers}
@@ -80,7 +93,7 @@ const DirectorHome: React.FC = () => {
   useEffect(() => {
     const hasStudents = mockSchools.some(item => item.type === 'student')
     const hasTeachers = mockSchools.some(item => item.type === 'teacher')
-    
+
     // Mostrar toast si falta alguno de los dos tipos
     setShowToast(!hasStudents || !hasTeachers)
   }, [])
@@ -133,10 +146,10 @@ const DirectorHome: React.FC = () => {
 
   return (
     <>
-      <PersistentToast 
-        visible={showToast} 
-        onGoToTeachers={handleGoToTeachers} 
-        onGoToStudents={handleGoToStudents} 
+      <PersistentToast
+        visible={showToast}
+        onGoToTeachers={handleGoToTeachers}
+        onGoToStudents={handleGoToStudents}
       />
       <LayoutWrapper navItems={navItems} title="Bienvenido al Portal del Director">
         <DataTable

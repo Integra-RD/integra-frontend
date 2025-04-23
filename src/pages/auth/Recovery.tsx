@@ -9,7 +9,6 @@ import { toast, ToastContainer } from 'react-toastify'
 import api from '../../services/api'
 import 'react-toastify/dist/ReactToastify.css'
 
-
 const Recovery: React.FC = () => {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)

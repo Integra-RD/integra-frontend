@@ -13,7 +13,6 @@ import api from '../../services/api'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-
 // TODO: Wire Updates and Deletes once it's fully setup.
 interface AuditEntry {
   id_actividad: string

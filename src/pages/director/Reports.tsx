@@ -177,18 +177,18 @@ const DirectorReport: React.FC = () => {
         )}
       </div>
 
- {/* Sección de importación */}
- <div className="mb-8">
+      {/* Sección de importación */}
+      <div className="mb-8">
         <FileUploader
           title="Importación Masiva de Calificaciones"
           description="Sube un archivo Excel (.xlsx) con las calificaciones de los estudiantes"
           //onFileUpload={handleFileUpload}
-          acceptedExtensions={[".xlsx"]}
+          acceptedExtensions={['.xlsx']}
           buttonText="Seleccionar Archivo"
           instructions={[
-            "El archivo debe contener columnas para ID de estudiante y calificación.",
-            "Asegúrese de seleccionar la materia, grado y período correctos antes de importar.",
-            "Las calificaciones deben estar en escala de 0-100.",
+            'El archivo debe contener columnas para ID de estudiante y calificación.',
+            'Asegúrese de seleccionar la materia, grado y período correctos antes de importar.',
+            'Las calificaciones deben estar en escala de 0-100.'
           ]}
           templatePath="/grade-import-template.xlsx"
         />

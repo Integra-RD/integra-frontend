@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import type React from 'react'
+import { useEffect, useState } from 'react'
 import {
   BuildingLibraryIcon,
   InformationCircleIcon,
   MapPinIcon,
   BriefcaseIcon,
-  DevicePhoneMobileIcon,
   EnvelopeIcon
 } from '@heroicons/react/24/outline'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -16,15 +16,16 @@ import pucmmlogo from '../../assets/pucmmlogo.png'
 import unibelogo from '../../assets/unibelogo.png'
 import unphulogo from '../../assets/unphulogo.png'
 import { getNavItemsByRole } from '../../utils/getNavItemsByRole'
+import api from '../../services/api'
+import { useAuthStore } from '../../store/authStore'
 
-const submissions = [
-  {
-    name: 'Colegio Nacional Ejemplo',
-    location: 'Av. Santo Cerro 11, Santo Domingo',
-    director: 'Jose Rodríguez',
-    email: 'joserodriguez@gmail.com'
-  }
-]
+interface SchoolData {
+  id: number
+  name: string
+  location: string
+  director: string
+  email: string
+}
 
 const lineDataAvg = {
   labels: ['Q1', 'Q2', 'Q3'],
@@ -133,56 +134,134 @@ const evolutionData = {
 const InstitutionData: React.FC = () => {
   const location = useLocation()
   const navigate = useNavigate()
-  const [currentPage] = useState(1)
+  const { userId } = useAuthStore()
 
-  const perPage = 3
-  const currentSubmissions = submissions.slice((currentPage - 1) * perPage, currentPage * perPage)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [schoolData, setSchoolData] = useState<SchoolData | null>(null)
 
-  const navItems = getNavItemsByRole('director', location, navigate)
   const [editing, setEditing] = useState({
     location: false,
     director: false,
-    email: false,
-  });
-  
-  const [editedData, setEditedData] = useState(() => {
-    const saved = localStorage.getItem('submissionData');
-    return saved
-      ? JSON.parse(saved)
-      : {
-          location: submissions[0].location,
-          director: submissions[0].director,
-          email: submissions[0].email,
-        };
-  });
+    email: false
+  })
+
+  const [editedData, setEditedData] = useState({
+    location: '',
+    director: '',
+    email: ''
+  })
 
   useEffect(() => {
-    localStorage.setItem('submissionData', JSON.stringify(editedData));
-  }, [editedData]);
-  
-  
-    
+    const fetchSchoolData = async () => {
+      try {
+        setIsLoading(true)
+        const response = await api.get('/academic/centro-educativo/list/')
+
+        if (response.data && response.data.results && response.data.results.length > 0) {
+          const school = response.data.results[0]
+
+          let locationStr = 'Sin dirección registrada'
+          if (school.direccion) {
+            if (typeof school.direccion === 'object') {
+              const dirObj = school.direccion
+              const parts = []
+              if (dirObj.calle) parts.push(dirObj.calle)
+              if (dirObj.informacion_vivienda) parts.push(dirObj.informacion_vivienda)
+              if (parts.length > 0) {
+                locationStr = parts.join(', ')
+              }
+            } else {
+              locationStr = school.direccion
+            }
+          }
+
+          const schoolData = {
+            id: school.id,
+            name: school.nombre || 'Centro Educativo',
+            location: locationStr,
+            director: school.director_nombre || 'Sin director asignado',
+            email: school.email || 'Sin correo registrado'
+          }
+
+          setSchoolData(schoolData)
+
+          setEditedData({
+            location: schoolData.location,
+            director: schoolData.director,
+            email: schoolData.email
+          })
+        } else {
+          setError('No se encontraron centros educativos')
+        }
+      } catch (err) {
+        console.error('Error fetching school data:', err)
+        setError('Error al cargar los datos del centro educativo')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchSchoolData()
+  }, [userId])
+
+  useEffect(() => {
+    if (!isLoading && schoolData) {
+      localStorage.setItem('submissionData', JSON.stringify(editedData))
+    }
+  }, [editedData, isLoading, schoolData])
+
   const handleChange = (field: string, value: string) => {
-    setEditedData(prev => ({ ...prev, [field]: value }));
-  };
-  
-  
+    setEditedData(prev => ({ ...prev, [field]: value }))
+  }
+
+  const navItems = getNavItemsByRole('director', location, navigate)
+
+  if (isLoading) {
+    return (
+      <LayoutWrapper
+        title="Mi Centro Educativo"
+        subtitle="Cargando datos del centro educativo..."
+        navItems={navItems}
+      >
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      </LayoutWrapper>
+    )
+  }
+
+  if (error) {
+    return (
+      <LayoutWrapper
+        title="Mi Centro Educativo"
+        subtitle="Error al cargar datos"
+        navItems={navItems}
+      >
+        <div
+          className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative"
+          role="alert"
+        >
+          <strong className="font-bold">Error: </strong>
+          <span className="block sm:inline">{error}</span>
+        </div>
+      </LayoutWrapper>
+    )
+  }
+
   return (
     <LayoutWrapper
       title="Mi Centro Educativo"
       subtitle="Maneja la identidad y operación de tu centro educativo: actualiza nombre, ubicación, director y datos de contacto de forma rápida y segura"
       navItems={navItems}
     >
-      {/* Card Principal: colegio */}
       <div className="w-full mx-auto mb-6">
-        {currentSubmissions.map((submission, idx) => (
+        {schoolData ? (
           <ViewCard
-            key={idx}
-            title={submission.name}
+            key={schoolData.id}
+            title={schoolData.name}
             titleIcon={<BuildingLibraryIcon className="w-5 h-5 text-blue-800" />}
             rightIcon={<InformationCircleIcon className="w-4 h-4 text-gray-400 mt-0.5" />}
-            showEditLink
-            onEditClick={() => setEditing({ location: true, director: true, email: true })}
             className="bg-[#f2f6fc]"
             variant="detailed"
           >
@@ -192,17 +271,16 @@ const InstitutionData: React.FC = () => {
                 <div>
                   <p className="text-[10px] text-gray-500">Ubicación</p>
                   {editing.location ? (
-                  <input
-                    type="text"
-                    className="text-sm font-medium bg-transparent border-b border-blue-300 focus:outline-none"
-                    value={editedData.location}
-                    onChange={(e) => handleChange('location', e.target.value)}
-                    onBlur={() => setEditing(prev => ({ ...prev, location: false }))}
-                  />
-                ) : (
-                  <p className="text-sm font-medium">{editedData.location}</p>
-                )}
-
+                    <input
+                      type="text"
+                      className="text-sm font-medium bg-transparent border-b border-blue-300 focus:outline-none"
+                      value={editedData.location}
+                      onChange={e => handleChange('location', e.target.value)}
+                      onBlur={() => setEditing(prev => ({ ...prev, location: false }))}
+                    />
+                  ) : (
+                    <p className="text-sm font-medium">{editedData.location}</p>
+                  )}
                 </div>
               </div>
               <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-md shadow-sm text-sm">
@@ -210,18 +288,16 @@ const InstitutionData: React.FC = () => {
                 <div>
                   <p className="text-[10px] text-gray-500">Director</p>
                   {editing.director ? (
-                  <input
-                    type="text"
-                    className="text-sm font-medium bg-transparent border-b border-blue-300 focus:outline-none"
-                    value={editedData.director}
-                    onChange={(e) => handleChange('director', e.target.value)}
-                    onBlur={() => setEditing(prev => ({ ...prev, director: false }))}
-                    
-                  />
-                ) : (
-                  <p className="text-sm font-medium">{editedData.director}</p>
-                )}
-
+                    <input
+                      type="text"
+                      className="text-sm font-medium bg-transparent border-b border-blue-300 focus:outline-none"
+                      value={editedData.director}
+                      onChange={e => handleChange('director', e.target.value)}
+                      onBlur={() => setEditing(prev => ({ ...prev, director: false }))}
+                    />
+                  ) : (
+                    <p className="text-sm font-medium">{editedData.director}</p>
+                  )}
                 </div>
               </div>
               <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-md shadow-sm text-sm">
@@ -229,23 +305,31 @@ const InstitutionData: React.FC = () => {
                 <div>
                   <p className="text-[10px] text-gray-500">Email</p>
                   {editing.email ? (
-                  <input
-                    type="text"
-                    className="text-sm font-medium bg-transparent border-b border-blue-300 focus:outline-none"
-                    value={editedData.email}
-                    onChange={(e) => handleChange('email', e.target.value)}
-                    onBlur={() => setEditing(prev => ({ ...prev, email: false }))}
-                    
-                  />
-                ) : (
-                  <p className="text-sm font-medium">{editedData.email}</p>
-                )}
-
+                    <input
+                      type="text"
+                      className="text-sm font-medium bg-transparent border-b border-blue-300 focus:outline-none"
+                      value={editedData.email}
+                      onChange={e => handleChange('email', e.target.value)}
+                      onBlur={() => setEditing(prev => ({ ...prev, email: false }))}
+                    />
+                  ) : (
+                    <p className="text-sm font-medium">{editedData.email}</p>
+                  )}
                 </div>
               </div>
             </div>
           </ViewCard>
-        ))}
+        ) : (
+          <div
+            className="bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-3 rounded relative"
+            role="alert"
+          >
+            <strong className="font-bold">Aviso: </strong>
+            <span className="block sm:inline">
+              No se encontraron centros educativos asociados a su cuenta.
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Segunda fila: Charts + Universidades */}
@@ -265,7 +349,7 @@ const InstitutionData: React.FC = () => {
           <ul className="space-y-2">
             {universities.map((uni, idx) => (
               <li key={idx} className="flex items-center gap-3">
-                <img src={uni.logo} alt="Uni logo" className="w-5 h-5" />
+                <img src={uni.logo || '/placeholder.svg'} alt="Uni logo" className="w-5 h-5" />
                 <div>
                   <p className="font-medium text-sm">{uni.name}</p>
                   <p className="text-xs text-gray-500">{uni.programs}</p>
