@@ -4,7 +4,8 @@ import {
   InformationCircleIcon,
   MapPinIcon,
   BriefcaseIcon,
-  DevicePhoneMobileIcon
+  DevicePhoneMobileIcon,
+  EnvelopeIcon
 } from '@heroicons/react/24/outline'
 import { useLocation, useNavigate } from 'react-router-dom'
 import LayoutWrapper from '../../components/LayoutWrapper'
@@ -18,10 +19,10 @@ import { getNavItemsByRole } from '../../utils/getNavItemsByRole'
 
 const submissions = [
   {
-    name: 'Colegio Nacional Ejemplo',
+    name: 'Colegio Parroquial Nuestra Señora de Lourdes',
     location: 'Av. Santo Cerro 11, Santo Domingo',
     director: 'Jose Rodríguez',
-    contacto: '809-123-4567'
+    email: 'joserodriguez@gmail.com'
   }
 ]
 
@@ -174,10 +175,10 @@ const InstitutionData: React.FC = () => {
                 </div>
               </div>
               <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-md shadow-sm text-sm">
-                <DevicePhoneMobileIcon className="w-4 h-4 text-gray-500" />
+                <EnvelopeIcon className="w-4 h-4 text-gray-500" />
                 <div>
-                  <p className="text-[10px] text-gray-500">Contacto</p>
-                  <p className="text-sm font-medium">{submission.contacto}</p>
+                  <p className="text-[10px] text-gray-500">Email</p>
+                  <p className="text-sm font-medium">{submission.email}</p>
                 </div>
               </div>
             </div>
