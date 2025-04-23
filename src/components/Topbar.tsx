@@ -33,6 +33,9 @@ const Topbar: React.FC<TopbarProps> = ({ navItems, user }) => {
     .slice(0, 2)
     .toUpperCase()
 
+  const parts = user.name.trim().split(/\s+/)
+  const displayName = parts.length > 1 ? `${parts[0]} ${parts[parts.length - 1]}` : parts[0]
+
   const handleLogout = () => {
     // clear tokens & auth state
     storeLogout()
@@ -82,7 +85,7 @@ const Topbar: React.FC<TopbarProps> = ({ navItems, user }) => {
                 {initials}
               </div>
               <div className="text-sm leading-tight">
-                <div className="text-gray-900 font-medium">{user.name}</div>
+                <div className="text-gray-900 font-medium">{displayName}</div>
                 <div className="text-gray-500 text-xs">ID: {user.id}</div>
               </div>
             </div>

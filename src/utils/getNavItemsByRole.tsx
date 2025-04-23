@@ -14,7 +14,6 @@ import {
 
 import type { Location } from 'react-router-dom'
 
-// TODO: Feed this role from a global state or context
 type UserRole = 'ministry' | 'director' | 'teacher' | 'student'
 
 interface NavItem {
