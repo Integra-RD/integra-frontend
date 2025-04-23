@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { PencilIcon, CheckIcon, ArrowPathIcon } from '@heroicons/react/24/outline'
-import FileUploader from '../../components/FileUploader'
-import DataTable from '../../components/DataTable'
-import Dropdown from '../../components/Dropdown'
-import LayoutWrapper from '../../components/LayoutWrapper'
-import { getNavItemsByRole } from '../../utils/getNavItemsByRole'
+import { useState } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
+import { PencilIcon, CheckIcon, ArrowPathIcon } from "@heroicons/react/24/outline"
+import FileUploader from "../../components/FileUploader"
+import DataTable from "../../components/DataTable"
+import Dropdown from "../../components/Dropdown"
+import LayoutWrapper from "../../components/LayoutWrapper"
+import { getNavItemsByRole } from "../../utils/getNavItemsByRole"
 
 // Definición de interfaces
 interface Student {
@@ -19,20 +19,20 @@ interface Student {
 
 // Datos de prueba
 const initialStudents: Student[] = [
-  { id: '20210001', name: 'Vicente Fernández', grade: 82, avg: 87.2 },
-  { id: '20210002', name: 'Alejandro Fernández', grade: 87, avg: 84.7 },
-  { id: '20210003', name: 'Joan Sebastian', grade: 97, avg: 98.1 },
-  { id: '20210004', name: 'Christian Nodal', grade: 95, avg: 93.8 },
-  { id: '20210005', name: 'Antonio Aguilar', grade: 91, avg: 87.7 },
-  { id: '20210006', name: 'Cristian Castro', grade: 98, avg: 96.3 },
-  { id: '20210007', name: 'Carlos Rivera', grade: 72, avg: 87.2 },
-  { id: '20210007', name: 'Carlos Rivera', grade: 72, avg: 87.2 }
+  { id: "20210001", name: "Vicente Fernández", grade: 82, avg: 87.2 },
+  { id: "20210002", name: "Alejandro Fernández", grade: 87, avg: 84.7 },
+  { id: "20210003", name: "Joan Sebastian", grade: 97, avg: 98.1 },
+  { id: "20210004", name: "Christian Nodal", grade: 95, avg: 93.8 },
+  { id: "20210005", name: "Antonio Aguilar", grade: 91, avg: 87.7 },
+  { id: "20210006", name: "Cristian Castro", grade: 98, avg: 96.3 },
+  { id: "20210007", name: "Carlos Rivera", grade: 72, avg: 87.2 },
+  { id: "20210007", name: "Carlos Rivera", grade: 72, avg: 87.2 },
 ]
 
 // Opciones para los dropdowns
-const subjects = ['Matemáticas', 'Español', 'Ciencias Naturales', 'Historia']
-const grades = ['5to de Secundaria', '4to de Secundaria', '3ro de Secundaria']
-const periods = ['2022-2023', '2021-2022', '2020-2021']
+const subjects = ["Matemáticas", "Español", "Ciencias Naturales", "Historia"]
+const grades = ["5to de Secundaria", "4to de Secundaria", "3ro de Secundaria"]
+const periods = ["2022-2023", "2021-2022", "2020-2021"]
 
 const Reports: React.FC = () => {
   const navigate = useNavigate()
@@ -46,22 +46,20 @@ const Reports: React.FC = () => {
   const [selectedPeriod, setSelectedPeriod] = useState(periods[0])
 
   // Configuración de navegación para Topbar
-  const navItems = getNavItemsByRole('teacher', location, navigate)
+  const navItems = getNavItemsByRole("teacher", location, navigate)
 
   // Cabeceras para DataTable
   const tableHeaders = [
-    { label: 'ID', key: 'id' },
-    { label: 'Estudiante', key: 'name' },
-    { label: 'Calificación', key: 'grade' },
-    { label: 'Promedio', key: 'avg' } // Nueva columna para el promedio
+    { label: "ID", key: "id" },
+    { label: "Estudiante", key: "name" },
+    { label: "Calificación", key: "grade" },
+    { label: "Promedio", key: "avg" }, // Nueva columna para el promedio
   ]
 
   // Manejador para cambiar calificaciones
   const handleGradeChange = (id: string, newGrade: number) => {
     if (newGrade >= 0 && newGrade <= 100) {
-      setStudents(
-        students.map(student => (student.id === id ? { ...student, grade: newGrade } : student))
-      )
+      setStudents(students.map((student) => (student.id === id ? { ...student, grade: newGrade } : student)))
     }
   }
 
@@ -77,7 +75,7 @@ const Reports: React.FC = () => {
           min="0"
           max="100"
           value={currentGrade}
-          onChange={e => handleGradeChange(studentId, Number(e.target.value))}
+          onChange={(e) => handleGradeChange(studentId, Number(e.target.value))}
           className="w-16 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#29638A]"
         />
       )
@@ -101,11 +99,11 @@ const Reports: React.FC = () => {
   }
 
   // Procesar los datos para DataTable con celdas personalizadas
-  const processedData = students.map(student => ({
+  const processedData = students.map((student) => ({
     id: student.id,
     name: student.name,
     grade: renderGradeCell(student.grade, student),
-    avg: renderAvgCell(student.avg) // Se agrega la columna de promedio
+    avg: renderAvgCell(student.avg), // Se agrega la columna de promedio
   }))
 
   // Componente para los botones de acción (editar/guardar)
@@ -184,13 +182,14 @@ const Reports: React.FC = () => {
           title="Importación Masiva de Calificaciones"
           description="Sube un archivo Excel (.xlsx) con las calificaciones de los estudiantes"
           //onFileUpload={handleFileUpload}
-          acceptedExtensions={['.xlsx']}
+          acceptedExtensions={[".xlsx"]}
           buttonText="Seleccionar Archivo"
           instructions={[
-            'El archivo debe contener columnas para ID de estudiante y calificación.',
-            'Asegúrese de seleccionar la materia, grado y período correctos antes de importar.',
-            'Las calificaciones deben estar en escala de 0-100.'
+            "El archivo debe contener columnas para ID de estudiante y calificación.",
+            "Asegúrese de seleccionar la materia, grado y período correctos antes de importar.",
+            "Las calificaciones deben estar en escala de 0-100.",
           ]}
+          templatePath="/grade-import-template.xlsx"
         />
       </div>
     </LayoutWrapper>
@@ -198,3 +197,4 @@ const Reports: React.FC = () => {
 }
 
 export default Reports
+
