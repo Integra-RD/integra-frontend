@@ -114,11 +114,7 @@ const MinistryHome: React.FC = () => {
     {
       label: 'Sector',
       key: (row: Centro) => sectorOptions.find(s => s.id === row.sector)?.nombre_sector ?? '—'
-    },
-    { label: 'Ranking Nacional', key: 'ranking_nacional' },
-    { label: 'Promedio de Calificación', key: 'promedio_calificacion' },
-    { label: 'Cantidad de Estudiantes', key: 'cantidad_estudiantes' },
-    { label: 'Última Actualización', key: 'ultima_actualizacion' }
+    }
   ]
   const totalPages = Math.max(1, Math.ceil(totalCount / pageSize))
 
