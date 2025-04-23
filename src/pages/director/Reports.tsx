@@ -10,6 +10,8 @@ import { getNavItemsByRole } from '../../utils/getNavItemsByRole'
 interface Student {
   id: string
   name: string
+  subject: string
+  period: string
   grade: number
   avg: number
 }
@@ -17,21 +19,20 @@ interface Student {
 // TODO: Fix logic related to grades and averages; Add snackbars for feedback for processes
 
 // Datos de prueba
-const initialStudents: Student[] = [
-  { id: '20210001', name: 'Vicente Fernández', grade: 82, avg: 87.2 },
-  { id: '20210002', name: 'Alejandro Fernández', grade: 87, avg: 84.7 },
-  { id: '20210003', name: 'Joan Sebastian', grade: 97, avg: 98.1 },
-  { id: '20210004', name: 'Christian Nodal', grade: 95, avg: 93.8 },
-  { id: '20210005', name: 'Antonio Aguilar', grade: 91, avg: 87.7 },
-  { id: '20210006', name: 'Cristian Castro', grade: 98, avg: 96.3 },
-  { id: '20210007', name: 'Carlos Rivera', grade: 72, avg: 87.2 },
-  { id: '20210007', name: 'Carlos Rivera', grade: 72, avg: 87.2 }
-]
-
-// Opciones para los dropdowns
 const subjects = ['Matemáticas', 'Español', 'Ciencias Naturales', 'Historia']
 const grades = ['5to de Secundaria', '4to de Secundaria', '3ro de Secundaria']
 const periods = ['2022-2023', '2021-2022', '2020-2021']
+
+const initialStudents = [
+  { id: '20210001', name: 'Vicente Fernández', subject: 'Matemáticas', period: '2022-2023', grade: 82, avg: 87.2 },
+  { id: '20210002', name: 'Alejandro Fernández', subject: 'Español', period: '2021-2022', grade: 87, avg: 84.7 },
+  { id: '20210003', name: 'Joan Sebastian', subject: 'Ciencias Naturales', period: '2020-2021', grade: 97, avg: 98.1 },
+  { id: '20210004', name: 'Christian Nodal', subject: 'Historia', period: '2022-2023', grade: 95, avg: 93.8 },
+  { id: '20210005', name: 'Antonio Aguilar', subject: 'Matemáticas', period: '2021-2022', grade: 91, avg: 87.7 },
+  { id: '20210006', name: 'Cristian Castro', subject: 'Español', period: '2020-2021', grade: 98, avg: 96.3 },
+  { id: '20210007', name: 'Carlos Rivera', subject: 'Ciencias Naturales', period: '2022-2023', grade: 72, avg: 87.2 },
+]
+
 
 const DirectorReport: React.FC = () => {
   const navigate = useNavigate()
@@ -49,10 +50,13 @@ const DirectorReport: React.FC = () => {
 
   // Cabeceras para DataTable
   const tableHeaders = [
-    { label: 'ID', key: 'id' },
+    { label: 'Matrícula', key: 'id' },
     { label: 'Estudiante', key: 'name' },
+    { label: 'Asignatura', key: 'subject' },
     { label: 'Calificación', key: 'grade' },
-    { label: 'Promedio', key: 'avg' } // Nueva columna para el promedio
+    { label: 'Periodo', key: 'period' },
+    { label: 'Curso', key: 'class' },
+    // Nueva columna para el promedio
   ]
 
   // Manejador para cambiar calificaciones
@@ -103,9 +107,12 @@ const DirectorReport: React.FC = () => {
   const processedData = students.map(student => ({
     id: student.id,
     name: student.name,
+    subject: student.subject,
+    period: student.period,
     grade: renderGradeCell(student.grade, student),
-    avg: renderAvgCell(student.avg) // Se agrega la columna de promedio
+    avg: renderAvgCell(student.avg)
   }))
+  
 
   // Componente para los botones de acción (editar/guardar)
   const ActionButton = () => (
