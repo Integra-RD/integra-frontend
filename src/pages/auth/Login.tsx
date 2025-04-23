@@ -25,9 +25,6 @@ import {
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-// TODO: Clean up for max readility and code splitting
-// Adjust endpoint for Director
-
 interface FormInputProps {
   id: string
   label: string
@@ -78,11 +75,11 @@ type Grade = {
   collapsed: boolean
 }
 
+// TODO: Arreglar Tecnico, it 400s for some reason i think the BD hasnt been updated
 const TIPOS_DE_CENTROS = [
-  { id: 1, label: 'Inicial' },
-  { id: 2, label: 'Básico' },
-  { id: 3, label: 'Medio' },
-  { id: 4, label: 'Técnico' }
+  { id: 1, label: 'Básico' },
+  { id: 2, label: 'Medio' },
+  { id: 3, label: 'Politécnico' }
 ]
 
 const Login: React.FC = () => {
@@ -120,12 +117,7 @@ const Login: React.FC = () => {
     api
       .get('/auth/auth-dropdown-options/', { params: { sectores: 'yes' } })
       .then(({ data }) =>
-        setSectores(
-          (data.sectores ?? []).map((s: any) => ({
-            id: s.id,
-            nombre: s.nombre_sector
-          }))
-        )
+        setSectores((data.sectores ?? []).map((s: any) => ({ id: s.id, nombre: s.nombre_sector })))
       )
       .catch(() => toast.error('No se pudieron cargar los sectores'))
   }, [isModalOpen, modalType])
@@ -168,19 +160,21 @@ const Login: React.FC = () => {
     }
   }
 
+  console.log({
+    modalType,
+    url: modalType === 'minerd' ? '/auth/solicitar-cuenta/minerd/' : '/auth/solicitar-cuenta/'
+  })
+
   const solicitarCuentaMinerd = async () => {
-    if (!minerdFirstName.trim() || !minerdLastName.trim()) {
+    if (!minerdFirstName.trim() || !minerdLastName.trim())
       return toast.error('Escribe nombre y apellido')
-    }
 
     const payload = {
       full_name: `${minerdFirstName.trim()} ${minerdLastName.trim()}`,
       email: minerdEmail.trim()
     }
     const check = MinerdAccountRequestSchema.safeParse(payload)
-    if (!check.success) {
-      return toast.error(check.error.errors[0].message)
-    }
+    if (!check.success) return toast.error(check.error.errors[0].message)
 
     setSubmitting(true)
     try {
@@ -196,29 +190,23 @@ const Login: React.FC = () => {
   }
 
   const solicitarCuentaDirector = async () => {
-    let centroId: number
-    try {
-      const { data } = await api.post('/academic/centro-educativo/', {
-        nombre_centro_educativo: schoolName,
-        direccion: {
-          calle: direccionCalle,
-          informacion_vivienda: direccionVivienda,
-          sector_id: sectorId
-        },
-        tipos_centro: tiposCentro
-      })
-      centroId = data.id
-    } catch (err: any) {
-      return toast.error(err.response?.data?.message ?? 'No se pudo crear el centro educativo')
+    const centroDto = {
+      nombre_centro_educativo: schoolName.trim(),
+      direccion: {
+        calle: direccionCalle.trim(),
+        informacion_vivienda: direccionVivienda.trim(),
+        sector_id: sectorId!
+      },
+      tipos_centro: tiposCentro
     }
 
     const payload = {
-      first_name: directorFirstName,
-      last_name: directorLastName,
-      email: directorEmail,
+      first_name: directorFirstName.trim(),
+      last_name: directorLastName.trim(),
+      email: directorEmail.trim(),
       password: autoPassword(),
       role_id: 5,
-      centro_educativo_data: { id: centroId },
+      centro_educativo_data: centroDto,
       cursos_data: grades.map(g => ({
         nombre_curso: g.name,
         nivel_educativo: g.name.includes('Primaria') ? 'Primaria' : 'Secundaria',
@@ -230,13 +218,11 @@ const Login: React.FC = () => {
       }))
     }
     const check = DirectorAccountRequestSchema.safeParse(payload)
-    if (!check.success) {
-      return toast.error(check.error.errors[0].message)
-    }
+    if (!check.success) return toast.error(check.error.errors[0].message)
 
     setSubmitting(true)
     try {
-      await api.post('/auth/solicitar-cuenta', payload)
+      await api.post('/auth/solicitar-cuenta/', payload)
       toast.success('Solicitud enviada')
       setIsModalOpen(false)
       resetModal()

@@ -17,8 +17,6 @@ import api from '../../services/api'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-// TODO: Connect to the backend realted to DELETE requests, right now it's just deleting it from the frontend
-
 interface RawRequest {
   id: number
   aprobado: boolean
@@ -27,6 +25,12 @@ interface RawRequest {
   last_name: string
   email: string
   centro_educativo_id: number | null
+  roles: { id_rol: number; nombre_rol: string }[]
+}
+
+interface RawCenter {
+  id: number
+  nombre_centro_educativo: string
 }
 
 interface AccountRequest {
@@ -35,6 +39,7 @@ interface AccountRequest {
   requested_date: string
   usuario: { full_name: string; email: string }
   centro_educativo?: { nombre_centro_educativo: string }
+  requestedRoleId: number
 }
 
 const PER_PAGE = 10
@@ -52,65 +57,85 @@ const ImportExportData: React.FC = () => {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    const fetchQueue = async () => {
+    const fetchData = async () => {
       setLoading(true)
+      const offset = (currentPage - 1) * PER_PAGE
+
       try {
-        const offset = (currentPage - 1) * PER_PAGE
-        const { data } = await api.get('/auth/cola-solicitudes/', {
-          params: { requests: PER_PAGE, offset }
-        })
+        if (activeTab === 'recibidos') {
+          const { data } = await api.get('/auth/cola-solicitudes/', {
+            params: { requests: PER_PAGE, offset }
+          })
+          setTotalPages(Math.max(1, Math.ceil(data.count / PER_PAGE)))
 
-        setTotalPages(Math.max(1, Math.ceil(data.count / PER_PAGE)))
+          const raws: RawRequest[] = data.results
+          const enriched: AccountRequest[] = raws.map(r => ({
+            id: r.id,
+            aprobado: r.aprobado,
+            requested_date: r.requested_date,
+            usuario: {
+              full_name: `${r.first_name} ${r.last_name}`,
+              email: r.email
+            },
+            centro_educativo: r.centro_educativo_id
+              ? { nombre_centro_educativo: '— sin nombre —' }
+              : undefined,
+            requestedRoleId: r.roles[0]?.id_rol
+          }))
 
-        const raws: RawRequest[] = data.results
+          setPending(enriched.filter(r => !r.aprobado))
+        } else {
+          const { data } = await api.get('/academic/centro-educativo/list/', {
+            params: { centers: PER_PAGE, offset }
+          })
+          setTotalPages(Math.max(1, Math.ceil(data.count / PER_PAGE)))
 
-        const enriched: AccountRequest[] = raws.map(r => ({
-          id: r.id,
-          aprobado: r.aprobado,
-          requested_date: r.requested_date,
-          usuario: {
-            full_name: `${r.first_name} ${r.last_name}`,
-            email: r.email
-          },
-          centro_educativo: r.centro_educativo_id
-            ? { nombre_centro_educativo: '— sin nombre —' }
-            : undefined
-        }))
-
-        setPending(enriched.filter(r => !r.aprobado))
-        setApproved(enriched.filter(r => r.aprobado))
+          const centers: RawCenter[] = data.results
+          const formatted: AccountRequest[] = centers.map(c => ({
+            id: c.id,
+            aprobado: true,
+            requested_date: '',
+            usuario: { full_name: '', email: '' },
+            centro_educativo: { nombre_centro_educativo: c.nombre_centro_educativo },
+            requestedRoleId: 5
+          }))
+          setApproved(formatted)
+        }
       } catch (err) {
         console.error(err)
-        toast.error('No se pudo cargar la cola de solicitudes')
+        toast.error(
+          activeTab === 'recibidos'
+            ? 'No se pudo cargar la cola de solicitudes'
+            : 'No se pudo cargar los centros registrados'
+        )
       } finally {
         setLoading(false)
       }
     }
 
-    fetchQueue()
+    fetchData()
   }, [activeTab, currentPage])
 
-  const decideRequest = async (id: number, approved: boolean) => {
+  const decideRequest = async (id: number, approvedDecision: boolean) => {
     const req = pending.find(r => r.id === id)
-    const body: any = { approved }
+    const body: any = { approved: approvedDecision }
 
-    if (approved && req) {
-      const roleId = req.centro_educativo ? 5 : 2
-      body.role_ids = [{ id_rol: roleId }]
+    if (approvedDecision && req) {
+      body.role_ids = [{ id_rol: req.requestedRoleId }]
     }
 
     try {
       await api.put(`/auth/account-approval/${id}`, body)
-      toast.success(approved ? 'Cuenta aprobada' : 'Solicitud rechazada')
+      toast.success(approvedDecision ? 'Cuenta aprobada' : 'Solicitud rechazada')
 
       setPending(prev => {
-        if (approved && req) {
+        if (approvedDecision && req) {
           setApproved(a => [{ ...req, aprobado: true }, ...a])
         }
         return prev.filter(r => r.id !== id)
       })
 
-      if (approved && req) {
+      if (approvedDecision && req) {
         try {
           await api.post('/auth/reset-password/', { email: req.usuario.email })
           toast.info('Correo de activación enviado')
@@ -218,7 +243,7 @@ const ImportExportData: React.FC = () => {
                       <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-md shadow-sm text-sm">
                         <TrophyIcon className="w-4 h-4 text-gray-500" />
                         <div>
-                          <p className="text-[10px] text-gray-500">Promedio General</p>
+                          <p className="text-[10px] text-gray-500">Promedio General</p>
                           <p className="text-sm font-medium">—</p>
                         </div>
                       </div>
