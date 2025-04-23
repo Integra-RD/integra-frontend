@@ -160,11 +160,6 @@ const Login: React.FC = () => {
     }
   }
 
-  console.log({
-    modalType,
-    url: modalType === 'minerd' ? '/auth/solicitar-cuenta/minerd/' : '/auth/solicitar-cuenta/'
-  })
-
   const solicitarCuentaMinerd = async () => {
     if (!minerdFirstName.trim() || !minerdLastName.trim())
       return toast.error('Escribe nombre y apellido')
