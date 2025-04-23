@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   BuildingLibraryIcon,
   InformationCircleIcon,
@@ -19,7 +19,7 @@ import { getNavItemsByRole } from '../../utils/getNavItemsByRole'
 
 const submissions = [
   {
-    name: 'Colegio Parroquial Nuestra Señora de Lourdes',
+    name: 'Colegio Nacional Ejemplo',
     location: 'Av. Santo Cerro 11, Santo Domingo',
     director: 'Jose Rodríguez',
     email: 'joserodriguez@gmail.com'
@@ -139,7 +139,34 @@ const InstitutionData: React.FC = () => {
   const currentSubmissions = submissions.slice((currentPage - 1) * perPage, currentPage * perPage)
 
   const navItems = getNavItemsByRole('director', location, navigate)
+  const [editing, setEditing] = useState({
+    location: false,
+    director: false,
+    email: false,
+  });
+  
+  const [editedData, setEditedData] = useState(() => {
+    const saved = localStorage.getItem('submissionData');
+    return saved
+      ? JSON.parse(saved)
+      : {
+          location: submissions[0].location,
+          director: submissions[0].director,
+          email: submissions[0].email,
+        };
+  });
 
+  useEffect(() => {
+    localStorage.setItem('submissionData', JSON.stringify(editedData));
+  }, [editedData]);
+  
+  
+    
+  const handleChange = (field: string, value: string) => {
+    setEditedData(prev => ({ ...prev, [field]: value }));
+  };
+  
+  
   return (
     <LayoutWrapper
       title="Mi Centro Educativo"
@@ -155,7 +182,7 @@ const InstitutionData: React.FC = () => {
             titleIcon={<BuildingLibraryIcon className="w-5 h-5 text-blue-800" />}
             rightIcon={<InformationCircleIcon className="w-4 h-4 text-gray-400 mt-0.5" />}
             showEditLink
-            onEditClick={() => console.log(`Editando datos de: ${submission.name}`)}
+            onEditClick={() => setEditing({ location: true, director: true, email: true })}
             className="bg-[#f2f6fc]"
             variant="detailed"
           >
@@ -164,21 +191,56 @@ const InstitutionData: React.FC = () => {
                 <MapPinIcon className="w-4 h-4 text-gray-500" />
                 <div>
                   <p className="text-[10px] text-gray-500">Ubicación</p>
-                  <p className="text-sm font-medium">{submission.location}</p>
+                  {editing.location ? (
+                  <input
+                    type="text"
+                    className="text-sm font-medium bg-transparent border-b border-blue-300 focus:outline-none"
+                    value={editedData.location}
+                    onChange={(e) => handleChange('location', e.target.value)}
+                    onBlur={() => setEditing(prev => ({ ...prev, location: false }))}
+                  />
+                ) : (
+                  <p className="text-sm font-medium">{editedData.location}</p>
+                )}
+
                 </div>
               </div>
               <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-md shadow-sm text-sm">
                 <BriefcaseIcon className="w-4 h-4 text-gray-500" />
                 <div>
                   <p className="text-[10px] text-gray-500">Director</p>
-                  <p className="text-sm font-medium">{submission.director}</p>
+                  {editing.director ? (
+                  <input
+                    type="text"
+                    className="text-sm font-medium bg-transparent border-b border-blue-300 focus:outline-none"
+                    value={editedData.director}
+                    onChange={(e) => handleChange('director', e.target.value)}
+                    onBlur={() => setEditing(prev => ({ ...prev, director: false }))}
+                    
+                  />
+                ) : (
+                  <p className="text-sm font-medium">{editedData.director}</p>
+                )}
+
                 </div>
               </div>
               <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-md shadow-sm text-sm">
                 <EnvelopeIcon className="w-4 h-4 text-gray-500" />
                 <div>
                   <p className="text-[10px] text-gray-500">Email</p>
-                  <p className="text-sm font-medium">{submission.email}</p>
+                  {editing.email ? (
+                  <input
+                    type="text"
+                    className="text-sm font-medium bg-transparent border-b border-blue-300 focus:outline-none"
+                    value={editedData.email}
+                    onChange={(e) => handleChange('email', e.target.value)}
+                    onBlur={() => setEditing(prev => ({ ...prev, email: false }))}
+                    
+                  />
+                ) : (
+                  <p className="text-sm font-medium">{editedData.email}</p>
+                )}
+
                 </div>
               </div>
             </div>
