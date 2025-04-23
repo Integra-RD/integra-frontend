@@ -14,6 +14,9 @@ export interface DataTableProps {
   dropdownOptions?: string[]
   extraFilters?: boolean | 'with-person-type'
   onPersonTypeChange?: (type: string) => void
+  selectedDropdownValue?: string; // Añade esta línea
+  onDropdownChange?: (value: string) => void;
+
 }
 
 const DataTable: React.FC<DataTableProps> = ({
@@ -22,7 +25,9 @@ const DataTable: React.FC<DataTableProps> = ({
   dropdownLabel,
   dropdownOptions = [],
   extraFilters = false,
-  onPersonTypeChange
+  onPersonTypeChange,
+  selectedDropdownValue,
+  onDropdownChange
 }) => {
   const [currentPage, setCurrentPage] = useState(1)
   const [rowsPerPage, setRowsPerPage] = useState(10)
@@ -92,64 +97,76 @@ const DataTable: React.FC<DataTableProps> = ({
 
       {/* Filtros de cursos */}
       {dropdownLabel && (
-        <div className="flex flex-wrap items-center mb-6 gap-4">
-          {extraFilters ? (
-            <>
-              <div className="flex items-center gap-2">
-                <select
-                  value={selected}
-                  onChange={e => setSelected(e.target.value)}
-                  className="border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none cursor-pointer hover:border-[#29638A] transition-colors"
-                >
-                  {dropdownOptions.map(option => (
-                    <option key={option}>{option}</option>
-                  ))}
-                </select>
-              </div>
-
-              {additionalFilters.map((value, index) => (
-                <div key={index} className="relative flex items-center">
-                  <button
-                    onClick={() => removeFilter(index)}
-                    className="absolute left-2 z-10 p-1 rounded-full text-gray-400 hover:bg-red-100 hover:text-red-500 focus:outline-none cursor-pointer transition-colors"
-                  >
-                    <XMarkIcon className="w-4 h-4" />
-                  </button>
-                  <select
-                    value={value}
-                    onChange={e => updateFilter(index, e.target.value)}
-                    className="border border-gray-300 rounded-md pl-10 pr-4 py-2 text-sm focus:outline-none cursor-pointer hover:border-[#29638A] transition-colors"
-                  >
-                    {dropdownOptions.map(option => (
-                      <option key={option}>{option}</option>
-                    ))}
-                  </select>
-                </div>
-              ))}
-
-              <div
-                className="inline-flex items-center border border-gray-300 rounded-md px-4 py-2 cursor-pointer text-sm hover:bg-gray-50 hover:border-[#29638A] transition-colors"
-                onClick={addFilter}
-              >
-                <PlusIcon className="w-4 h-4 mr-2" />
-                Agregar otro {dropdownLabel.toLowerCase()}
-              </div>
-            </>
-          ) : (
-            <div className="flex items-center gap-2">
-              <select
-                value={selected}
-                onChange={e => setSelected(e.target.value)}
-                className="border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none"
-              >
-                {dropdownOptions.map(option => (
-                  <option key={option}>{option}</option>
-                ))}
-              </select>
-            </div>
-          )}
+  <div className="flex flex-wrap items-center mb-6 gap-4">
+    {extraFilters ? (
+      <>
+        <div className="flex items-center gap-2">
+          <select
+            value={selectedDropdownValue || selected}
+            onChange={e => {
+              setSelected(e.target.value);
+              onDropdownChange && onDropdownChange(e.target.value);
+            }}
+            className="border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none cursor-pointer hover:border-[#29638A] transition-colors"
+          >
+            {dropdownOptions.map(option => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
         </div>
-      )}
+
+        {additionalFilters.map((value, index) => (
+          <div key={index} className="relative flex items-center">
+            <button
+              onClick={() => removeFilter(index)}
+              className="absolute left-2 z-10 p-1 rounded-full text-gray-400 hover:bg-red-100 hover:text-red-500 focus:outline-none cursor-pointer transition-colors"
+            >
+              <XMarkIcon className="w-4 h-4" />
+            </button>
+            <select
+              value={value}
+              onChange={e => updateFilter(index, e.target.value)}
+              className="border border-gray-300 rounded-md pl-10 pr-4 py-2 text-sm focus:outline-none cursor-pointer hover:border-[#29638A] transition-colors"
+            >
+              {dropdownOptions.map(option => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+        ))}
+
+        <div
+          className="inline-flex items-center border border-gray-300 rounded-md px-4 py-2 cursor-pointer text-sm hover:bg-gray-50 hover:border-[#29638A] transition-colors"
+          onClick={addFilter}
+        >
+          <PlusIcon className="w-4 h-4 mr-2" />
+          Agregar otro {dropdownLabel.toLowerCase()}
+        </div>
+      </>
+    ) : (
+      <div className="flex items-center gap-2">
+        <select
+          value={selectedDropdownValue || selected}
+          onChange={e => {
+            setSelected(e.target.value);
+            onDropdownChange && onDropdownChange(e.target.value);
+          }}
+          className="border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none cursor-pointer hover:border-[#29638A] transition-colors"
+        >
+          {dropdownOptions.map(option => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      </div>
+    )}
+  </div>
+)}
 
       {/* Tabla */}
       <div className="rounded-2xl shadow bg-[#f5faff]/60 w-full overflow-hidden">
