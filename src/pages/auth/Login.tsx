@@ -66,6 +66,8 @@ const FormInput: React.FC<FormInputProps> = ({
   </div>
 )
 
+// TODO: Add required fields for better ux/ui
+
 type Grade = {
   id: number
   name: string

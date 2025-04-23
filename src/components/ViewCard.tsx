@@ -134,19 +134,19 @@ const ViewCard: React.FC<ViewCardProps> = ({
             />
           )}
 
-          {showDelete && (
-            <TrashIcon
-              onClick={onDeleteClick}
-              title="Eliminar"
-              className="w-5 h-5 cursor-pointer text-slate-400 hover:text-red-500 transition"
-            />
-          )}
-
           {showEditLink && (
             <PencilSquareIcon
               onClick={onEditClick}
               title="Editar"
               className="w-5 h-5 cursor-pointer text-slate-400 hover:text-blue-600 transition"
+            />
+          )}
+
+          {showDelete && (
+            <TrashIcon
+              onClick={onDeleteClick}
+              title="Eliminar"
+              className="w-5 h-5 cursor-pointer text-slate-400 hover:text-red-500 transition"
             />
           )}
         </div>
