@@ -19,7 +19,7 @@ import { getNavItemsByRole } from '../../utils/getNavItemsByRole'
 
 const submissions = [
   {
-    name: 'Colegio Nacional Ejemplo',
+    name: 'Colegio Parroquial Nuestra Señora de Lourdes',
     location: 'Av. Santo Cerro 11, Santo Domingo',
     director: 'Jose Rodríguez',
     email: 'joserodriguez@gmail.com'

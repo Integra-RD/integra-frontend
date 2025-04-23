@@ -9,7 +9,6 @@ import { toast, ToastContainer } from 'react-toastify'
 import api from '../../services/api'
 import 'react-toastify/dist/ReactToastify.css'
 
-// TODO: Better ux/ui for toasts, implement Zod for form validation, and add loading state to the button
 
 const Recovery: React.FC = () => {
   const [email, setEmail] = useState('')
