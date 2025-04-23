@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { PencilIcon, CheckIcon, ArrowPathIcon } from '@heroicons/react/24/outline'
 import FileUploader from '../../components/FileUploader'
@@ -6,24 +6,13 @@ import DataTable from '../../components/DataTable'
 import Dropdown from '../../components/Dropdown'
 import LayoutWrapper from '../../components/LayoutWrapper'
 import { getNavItemsByRole } from '../../utils/getNavItemsByRole'
-import api from '../../services/api'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-// TODO: Wire with backend once uploading of data of students and teachers is done
+// MVP estático: datos hardcodeados para presentación
 interface RawStudent {
   id: string
   full_name: string
-}
-interface RawCalificacion {
-  id: number
-  estudiante: number
-  asignatura: number
-  nota: string
-  periodo: string
-}
-interface RawCalificacionesResponse {
-  calificaciones: RawCalificacion[]
 }
 interface Student {
   id: string
@@ -44,13 +33,41 @@ const tableHeaders = [
   { label: 'Promedio', key: 'avg' }
 ]
 
+// Datos estáticos de ejemplo
+const staticRoster: RawStudent[] = [
+  { id: '1', full_name: 'Juan Pérez' },
+  { id: '2', full_name: 'María García' },
+  { id: '3', full_name: 'Carlos Rodríguez' },
+  { id: '4', full_name: 'Ana Martínez' },
+  { id: '5', full_name: 'Luis Fernández' },
+  { id: '6', full_name: 'Sofía López' },
+  { id: '7', full_name: 'Miguel Torres' },
+  { id: '8', full_name: 'Lucía Gómez' },
+  { id: '9', full_name: 'Jesús Díaz' },
+  { id: '10', full_name: 'Laura Sánchez' }
+]
+
+const staticStudents: Student[] = [
+  { id: '1', name: 'Juan Pérez', grade: 85, avg: 88.4, hasGrade: true },
+  { id: '2', name: 'María García', grade: 92, avg: 90.1, hasGrade: true },
+  { id: '3', name: 'Carlos Rodríguez', grade: 0, avg: 75.2, hasGrade: false },
+  { id: '4', name: 'Ana Martínez', grade: 78, avg: 80.5, hasGrade: true },
+  { id: '5', name: 'Luis Fernández', grade: 0, avg: 0, hasGrade: false },
+  { id: '6', name: 'Sofía López', grade: 100, avg: 95.6, hasGrade: true },
+  { id: '7', name: 'Miguel Torres', grade: 67, avg: 70.3, hasGrade: true },
+  { id: '8', name: 'Lucía Gómez', grade: 0, avg: 65.4, hasGrade: false },
+  { id: '9', name: 'Jesús Díaz', grade: 89, avg: 87.9, hasGrade: true },
+  { id: '10', name: 'Laura Sánchez', grade: 73, avg: 76.8, hasGrade: true }
+]
+
 const Reports: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const navItems = getNavItemsByRole('teacher', location, navigate)
 
-  const [roster, setRoster] = useState<RawStudent[]>([])
-  const [students, setStudents] = useState<Student[]>([])
+  // estados iniciales con datos estáticos
+  const [] = useState<RawStudent[]>(staticRoster)
+  const [students, setStudents] = useState<Student[]>(staticStudents)
   const [isEditing, setIsEditing] = useState(false)
   const [isUploading] = useState(false)
 
@@ -58,78 +75,14 @@ const Reports: React.FC = () => {
   const [selectedGrade, setSelectedGrade] = useState(grades[0])
   const [selectedPeriod, setSelectedPeriod] = useState(periods[0])
 
-  const fetchRoster = useCallback(async () => {
-    try {
-      const { data } = await api.get<{ count: number; results: RawStudent[] }>(
-        '/academic/docente/estudiantes/',
-        { params: { students: 100, offset: 0 } }
-      )
-      setRoster(data.results)
-    } catch {
-      toast.error('No se pudo cargar la lista de estudiantes')
-    }
-  }, [])
-
-  const fetchGrades = useCallback(async () => {
-    if (!roster.length) return
-    const subjectId = subjects.indexOf(selectedSubject) + 1
-    const period = selectedPeriod
-
-    try {
-      const results = await Promise.all(
-        roster.map(async ({ id, full_name }) => {
-          const res = await api.get<RawCalificacionesResponse>(
-            `/academic/docente/estudiantes/${id}/calificaciones/`
-          )
-          const all = res.data.calificaciones
-          const filtered = all.filter(c => c.asignatura === subjectId && c.periodo === period)
-          const hasGrade = filtered.length > 0
-          const grade = hasGrade ? Number(filtered[0].nota) : 0
-          const avg =
-            all.length > 0 ? all.reduce((sum, c) => sum + Number(c.nota), 0) / all.length : 0
-          return { id, name: full_name, grade, avg, hasGrade }
-        })
-      )
-      setStudents(results)
-    } catch {
-      toast.error('No se pudo cargar las calificaciones')
-    }
-  }, [roster, selectedSubject, selectedPeriod])
-
-  useEffect(() => {
-    fetchRoster()
-  }, [fetchRoster])
-
-  useEffect(() => {
-    fetchGrades()
-  }, [fetchGrades])
-
   const handleGradeChange = (id: string, newGrade: number) => {
     if (newGrade < 0 || newGrade > 100) return
     setStudents(students.map(s => (s.id === id ? { ...s, grade: newGrade } : s)))
   }
 
-  const handleSave = async () => {
+  const handleSave = () => {
     setIsEditing(false)
-    const subjectId = subjects.indexOf(selectedSubject) + 1
-    const periodo = selectedPeriod
-
-    try {
-      await Promise.all(
-        students.map(s =>
-          api.put(`/academic/docente/calificaciones/${s.id}/actualizar/`, {
-            estudiante: Number(s.id),
-            asignatura: subjectId,
-            nota: String(s.grade),
-            periodo
-          })
-        )
-      )
-      toast.success('Calificaciones actualizadas')
-      fetchGrades()
-    } catch {
-      toast.error('Error al guardar calificaciones')
-    }
+    toast.success('Calificaciones actualizadas (MVP estático)')
   }
 
   const renderGradeCell = (value: number, row: Student) => {
@@ -194,7 +147,7 @@ const Reports: React.FC = () => {
       <LayoutWrapper
         navItems={navItems}
         title="Reportes"
-        subtitle="Consulta tus estudiantes y actualiza sus calificaciones por asignatura y periodo."
+        subtitle="Consulta tus estudiantes y actualiza sus calificaciones (MVP estático)"
       >
         <div className="flex flex-wrap gap-4 mb-8 items-end">
           <Dropdown
@@ -242,7 +195,7 @@ const Reports: React.FC = () => {
           <FileUploader
             title="Importación Masiva de Calificaciones"
             description="Sube un archivo Excel (.xlsx) con las calificaciones"
-            acceptedExtensions={['.xlsx']}
+            acceptedExtensions={['xlsx']}
             buttonText="Seleccionar Archivo"
             instructions={[
               'El archivo debe contener columnas para matrícula y calificación.',
